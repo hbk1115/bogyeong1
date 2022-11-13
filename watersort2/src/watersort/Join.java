@@ -62,12 +62,13 @@ public class Join extends JFrame{
         this.id.setBounds(80, 200, 70, 40);
         this.idField.setBounds(200, 200, 200, 40);
         this.idcheck.setBounds(420, 200, 100, 40);
-        
+        //화면 위의 제목
         add(this.joinLabel);
+        //아이디 관련
         add(this.id);           
         add(this.idField);
         add(this.idcheck);
-        
+     
         this.password = new JLabel("비밀번호");
         this.passField = new JPasswordField(20);
         this.passCheck = new JLabel("비밀번호 확인");
@@ -77,7 +78,7 @@ public class Join extends JFrame{
         this.passField.setBounds(200, 270, 200, 40);
         this.passCheck.setBounds(80, 340, 100, 40);
         this.passCheckField.setBounds(200, 340, 200, 40);
-        
+        //비밀번호 관련
         add(this.password);
         add(this.passField);
         add(this.passCheck);
@@ -88,7 +89,7 @@ public class Join extends JFrame{
         
         this.create.setBounds(230, 410, 70, 40);
         this.back.setBounds(310, 410, 70, 40);
-        
+        //부가 기능
         add(this.create);        
         add(this.back);
         
