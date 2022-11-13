@@ -9,7 +9,7 @@ public class Rank extends JFrame{
 		 
         this.setTitle("Rank");
         JPanel jPanel = new JPanel();
-        JButton btn3 = new JButton("ë’¤ë¡œ");
+        JButton btn3 = new JButton("µÚ·Î");
         
         setSize(500, 500);
         jPanel.add(btn3);

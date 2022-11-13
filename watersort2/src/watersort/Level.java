@@ -12,7 +12,7 @@ public class Level extends JFrame{
         this.setTitle("Level");
         JPanel jPanel = new JPanel();
         JButton btn1 = new JButton("Level1");
-        JButton btn3 = new JButton("ë’¤ë¡œ");
+        JButton btn3 = new JButton("µÚ·Î");
         
         setSize(500, 500);
         jPanel.add(btn1);

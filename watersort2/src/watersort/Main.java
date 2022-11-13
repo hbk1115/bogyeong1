@@ -22,9 +22,9 @@ public class Main extends JFrame{
         setTitle("Main");
         setSize(500, 500);
         jPanel = new JPanel();
-        btn1 = new JButton("ë¡œê·¸ì¸");
-        btn2 = new JButton("íšŒì›ê°€ì…");
-        btn3 = new JButton("ë’¤ë¡œ");
+        btn1 = new JButton("·Î±×ÀÎ");
+        btn2 = new JButton("È¸¿ø°¡ÀÔ");
+        btn3 = new JButton("µÚ·Î");
         
         jPanel.add(btn1);
         jPanel.add(btn2);

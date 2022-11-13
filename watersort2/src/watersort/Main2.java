@@ -9,9 +9,9 @@ public class Main2 extends JFrame{
 		 
         this.setTitle("Main2");
         JPanel jPanel = new JPanel();
-        JButton btn1 = new JButton("ê²Œìž„ì‹œìž‘");
-        JButton btn2 = new JButton("ìˆœìœ„");
-        JButton btn3 = new JButton("ë’¤ë¡œ");
+        JButton btn1 = new JButton("°ÔÀÓ½ÃÀÛ");
+        JButton btn2 = new JButton("¼øÀ§");
+        JButton btn3 = new JButton("µÚ·Î");
         setSize(500, 500);
         jPanel.add(btn1);
         jPanel.add(btn2);
