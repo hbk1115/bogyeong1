@@ -93,7 +93,7 @@ public class Join extends JFrame{
         add(this.create);        
         add(this.back);
         
-        //id 중복체크 버튼(idcheck) 이벤트
+        //id 중복체크 버튼(idcheck) 이벤트 
         this.idcheck.addActionListener(new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
