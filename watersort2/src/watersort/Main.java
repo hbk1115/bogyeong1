@@ -6,8 +6,6 @@ import java.awt.event.*;
 
 public class Main extends JFrame{
 	
-	private WaterSort_main watersort;
-	
 	JPanel jPanel;
     JButton btn1;
     JButton btn2;

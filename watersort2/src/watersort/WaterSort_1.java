@@ -7,75 +7,68 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 
-class timer2 extends JFrame implements Runnable{
-	
-	private JLabel timel;
-	int n2;
-	int n;
-	
-	public timer2(JLabel timel) {
-		this.timel = timel;
-		this.n2 = 0;
-		this.n = 0;
-	}
-	
-	public void run() {
-	
-		while(true) {
-			timel.setText(Integer.toString(n) +  " : " + Integer.toString(n2));
-			n2++;
-			try {
-				if(n2 == 10) {
-					n2 = 0;
-					n++;
-				}
-				Thread.sleep(100);
-				
-			}
-			catch(InterruptedException e) {
-				return;
-			}
-			
-		}
-		
-	}
-
-}
-
 
 class WaterSort_main extends JFrame{
 	
-    private Character red;
-    private Character blue;
-    private Character green;
-    private Character pink;
-    private int maxColours;
-    private int maxBottles;
-    private int MovesMade;
-    private int To;
-    private int From;
-    private int count;
-    private int backcount;
-    private JLabel[] jb;
-    private JLabel[] jjb;
-    private JLabel[] bottlelabel;
-    private Thread th2;
-    private ArrayList<Character> bottles[];
-    private Stack<Character> colours;
-    private Stack<Character> Moves;
-    private JButton btn3;
-    private JLabel timelabel2;
-    private timer2 runnable2;
-    private int rand_bottle;
-    private int x1;
-    private int count2;
-    private char temp;
-    private int x2;
-    private int excount;
-    private int excount2;
-    private JLabel click;
-    private int undoto;
-    private int undofrom;
+    public Character red;
+    public Character blue;
+    public Character green;
+    public Character pink;
+    public int maxColours;
+    public int maxBottles;
+    public int MovesMade;
+    public int To;
+    public int From;
+    public int count;
+    public int backcount;
+    public JLabel[] jb;
+    public JLabel[] jjb;
+    public JLabel[] bottlelabel;
+    public Thread th2;
+    public Thread th3;
+    public ArrayList<Character> bottles[];
+    public Stack<Character> colours;
+    public Stack<Character> Moves;
+    public JButton btn3;
+    public JLabel timelabel2;
+    public Timer runnable2;
+    public Counter runnable3;
+    public int rand_bottle;
+    public int x1;
+    public int count2;
+    public char temp;
+    public int x2;
+    public int excount;
+    public int excount2;
+    public JLabel click;
+    public int undoto;
+    public int undofrom;
+    
+    class Counter extends JFrame implements Runnable{
+    	
+    	public void run() {
+    	
+    		while(true) {
+    			try {
+    				Thread.sleep(100);
+    				operation(bottles, Moves);
+    				if(Solved(bottles) == true) {
+    		        	
+    		        	th2.interrupt();
+    		        	th3.interrupt();
+    		        	break;
+
+    		        }
+    			} catch (InterruptedException e) {
+    				
+    				e.printStackTrace();
+    			}
+    			
+    		}
+    		
+    	}
+
+    }
 
     
 	public WaterSort_main() {
@@ -151,19 +144,20 @@ class WaterSort_main extends JFrame{
         	jjb[i].setVisible(true);
         	add(jjb[i]);
         	jjb[i].addMouseListener(new MyMouseListener());
-        	//jjb[i].addActionListener(this);
         }
         
         timelabel2 = new JLabel();
-        
         timelabel2.setLocation(300, 150);
         timelabel2.setSize(100,50);
         timelabel2.setVisible(true);
         timelabel2.setFont(new Font("Gothic", Font.ITALIC, 20));
 
-        runnable2 = new timer2(timelabel2);
+        runnable2 = new Timer(timelabel2);
         th2 = new Thread(runnable2);
         add(timelabel2);
+        
+        runnable3 = new Counter();
+        th3 = new Thread(runnable3);
         
     	setLocationRelativeTo(null);
         fillColourStack(colours);
@@ -176,8 +170,10 @@ class WaterSort_main extends JFrame{
 
         showAll(bottles);
         th2.start();
-        operation(bottles, Moves);//이 부분이 실질적으로 실행되는 부분인데, 아까 멈춘 화면 보니까 물병들 채우고 배치까지는 된 것 같거든요
-        th2.interrupt();
+        th3.start();
+        
+
+        
 	}
 	
     public void showAll(ArrayList bottles[]) {
@@ -308,7 +304,7 @@ class WaterSort_main extends JFrame{
     }
 
     public boolean isValidMove(ArrayList bottles[], Stack Moves, int from, int to) {
-
+    	
         if (bottles[from].size() == 0) {
         	System.out.println("empty");
             return false;
@@ -373,59 +369,63 @@ class WaterSort_main extends JFrame{
         }
 
     }
-/*
-    public boolean validateInput(char val) {
+
+    public void Undo(ArrayList bottles[], Stack Moves) {
+    	
+        if (Moves.peek() != null) {
+        	undoto = (int) (Moves.pop());
+            undofrom = (int) (Moves.pop());
+            bottles[undofrom].add(bottles[undoto].get(bottles[undoto].size()-1));
+            bottles[undoto].remove(bottles[undoto].size()-1);
+            showAll(bottles);
+        }
+    }
+    
+    public boolean validateInput(int val) {
         boolean result = false;
         switch (val) {
-        case '0':
+        case 0:
             result = true;
             break;
-        case '1':
+        case 1:
             result = true;
             break;
-        case '2':
+        case 2:
             result = true;
             break;
-        case '3':
+        case 3:
             result = true;
             break;
-        case '4':
+        case 4:
             result = true;
             break;
-        case '5':
+        case 5:
             result = true;
             break;
 
-        case 'b':
+        case 10:
             result = true;
             break;
-        case 'B':
-            result = true;
-            break;
+            
         default:
             result = false;
             break;
         }
         return result;
     }
-*/
-    void Undo(ArrayList bottles[], Stack Moves) {
-    	
-        if (Moves.peek() != null) {
-            undoto = (int) (Moves.pop());
-            undofrom = (int) (Moves.pop());
-            bottles[undofrom].add(bottles[undoto].get(bottles[undoto].size()-1));
-            bottles[undoto].remove(bottles[undoto].size()-1);
-            showAll(bottles);
-
-        }
-    }
     
-    void operation(ArrayList bottles[], Stack Moves) {
-    	while(!Solved(bottles)) {
-    		System.out.println(" ");
+
+    public void operation(ArrayList bottles[], Stack Moves) {
+    	
+    	try {
+			System.out.print("");
     		if (From == 10 && To == 10) {
-                Undo(bottles, Moves);
+    			while(excount2 > 0) {
+    				System.out.println("excount2 =" + excount2);
+                    Undo(bottles, Moves);
+                    excount2--;
+    			}
+    			backcount--;
                 From = 7;
                 To = 7;
     		}
@@ -436,78 +436,27 @@ class WaterSort_main extends JFrame{
                     showAll(bottles);
                     From = 7;
                     To = 7;
-
                 } else {
                 	System.out.println("move ex");
                     showAll(bottles);
                     From = 7;
                     To = 7;
                 }
-
             }
     		else {
     			
     		}
-    		
-    	}
-    }
-/*
-    void operation(ArrayList bottles[], Stack Moves) {
-    	
-        while (!Solved(bottles)) { 
-            try 
-            {
-            	System.out.println("");
-                while(true) {
-                	if(to != '7') {
-                		break;
-                	}	
-                }
+		}catch (Exception e) {
+        	System.out.println("catch");
+	}
+}
+    
 
-                if (from == ('B') && to == ('B')) {
-                    Undo(bottles, Moves);
-                    from = '7';
-                    to = '7';
-                } else if (validateInput(from)) {
-                	while(true) {
-                    	if(from != '7')
-                    		break;
-                    }
 
-                    if (validateInput(to)) {
-                    	 To = Character.getNumericValue(to);
-                         From = Character.getNumericValue(from);
-
-                        if (isValidMove(bottles, Moves, From, To)) {
-                            System.out.println("move");
-                            showAll(bottles);
-                            to = '7';
-                            from = '7';
-
-                        } else {
-                        	System.out.println("move ex");
-                            showAll(bottles);
-                            to = '7';
-                            from = '7';
-                        }
-                    }
-
-                } else {
-
-                }
-            } catch (Exception e) {
-            	System.out.println("catch");
-                validateInput('n');
-            }
-
-        }
-    }
-    */
     class MyMouseListener implements MouseListener{
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
 			
 		}
 
@@ -579,114 +528,25 @@ class WaterSort_main extends JFrame{
 				if(backcount >= 0) {
 					To = 10;
 					From = 10;
-					backcount--;
 				}
-				
 			}
-			
-			
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
 		}
-    	
     }
-
-
-	/*
-	public void actionPerformed(ActionEvent e) {
-		
-		if(e.getActionCommand() == "Button1") {
-			if(count == 1) {
-				count--;
-				to = '0';
-			}
-			else {
-				count++;
-				from = '0';
-			}
-			
-		}
-		else if(e.getActionCommand() == "Button2"){
-			if(count == 1) {
-				count--;
-				to = '1';
-			}
-			else {
-				count++;
-				from = '1';
-			}
-		}
-		else if(e.getActionCommand() == "Button3"){
-			if(count == 1) {
-				count--;
-				to = '2';
-			}
-			else {
-				count++;
-				from = '2';
-			}
-		}
-		else if(e.getActionCommand() == "Button4"){
-			if(count == 1) {
-				count--;
-				to = '3';
-			}
-			else {
-				count++;
-				from = '3';
-			}
-		}
-		else if(e.getActionCommand() == "Button5"){
-			if(count == 1) {
-				count--;
-				to = '4';
-			}
-			else {
-				count++;
-				from = '4';
-			}
-		}
-		else if(e.getActionCommand() == "Button6"){
-			if(count == 1) {
-				count--;
-				to = '5';
-			}
-			else {
-				count++;
-				from = '5';
-			}
-		}
-		else if(e.getActionCommand() == "back"){
-			if(backcount >= 0) {
-				to = 'B';
-				from = 'B';
-				backcount--;
-			}
-			
-		}
-
-	
-}
-*/
-   
-    
-
 }
 
 public class WaterSort_1 {

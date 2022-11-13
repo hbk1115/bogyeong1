@@ -1,6 +1,4 @@
 package watersort;
-
-import watersort.WaterSort_main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

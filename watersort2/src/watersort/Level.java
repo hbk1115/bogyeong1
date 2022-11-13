@@ -6,7 +6,6 @@ import java.awt.event.*;
 
 public class Level extends JFrame{
 	
-	WaterSort_main watersort;
 	public Level() {
 		 
         this.setTitle("Level");
