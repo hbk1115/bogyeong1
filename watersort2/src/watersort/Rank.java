@@ -6,31 +6,37 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
 
+/*
+ * ê³ ë¯¼ë˜ëŠ” ë¶€ë¶„(ì§ˆë¬¸í•˜ê¸°)
+ * 1. ìˆœìœ„í‘œì‹œí•  ë•Œ 1ë“± xxx 2 ì´ë ‡ê²Œ í• ê±´ì§€ ê·¸ëƒ¥ ì¶œë ¥í• ê±´ì§€
+ * 2. í˜„ì¬ í”Œë ˆì´ì–´ì˜ ìµœëŒ€ ìˆœìœ„ë¥¼ í‘œì‹œí• ê±´ì§€ ex) í˜„ì¬ xxxë‹˜ì˜ ìˆœìœ„ëŠ” xë“±ì…ë‹ˆë‹¤.
+ * 3. í”Œë ˆì´ì–´ê°€ ì‹ ê¸°ë¡ì„ ê°±ì‹ í•˜ë©´ (ì´ë™íšŸìˆ˜ 10ë²ˆìœ¼ë¡œ ë ˆë²¨ 1ì„ í´ë¦¬ì–´í–ˆì—ˆëŠ”ë° 2ë²ˆìœ¼ë¡œ ê¸°ë¡ì„ ê°±ì‹ í• ê²½ìš°) ì „ ê¸°ë¡(10ë²ˆ)ì„ ì§€ìš¸ê±´ì§€
+ */
 
 public class Rank extends JFrame{
 	
 	JLabel title = new JLabel("Rank");
 	
-	JButton timeRank;		//½Ã°£ ·©Å©
-	JButton countRank;		//È½¼ö ·©Å©
+	JButton timeRank;		//ì‹œê°„ ë­í¬
+	JButton countRank;		//íšŸìˆ˜ ë­í¬
 	
-	JTextArea rankArea;		//·©Å© º¸¿©ÁÖ´Â °ø°£
+	JTextArea rankArea;		//ë­í¬ ë³´ì—¬ì£¼ëŠ” ê³µê°„
 	
-	JComboBox levelBox;		//·¹º§ ÄŞº¸¹Ú½º(·¹º§º°·Î ·©Å© º¸¿©ÁÖ±â À§ÇÔ)
+	JComboBox levelBox;		//ë ˆë²¨ ì½¤ë³´ë°•ìŠ¤(ë ˆë²¨ë³„ë¡œ ë­í¬ ë³´ì—¬ì£¼ê¸° ìœ„í•¨)
 	
-	Connection conn;                     //DB Ä¿³Ø¼Ç ¿¬°á °´Ã¼
-	String edit_ID = "root";             //DB ¿¬°á ¾ÆÀÌµğ(´Ù¸¥ µ¥ÀÌÅÍº£ÀÌ½º ¾µ °æ¿ì ¼öÁ¤)
-	String edit_PASSWORD = "ghtjd020709!";   //ºñ¹Ğ¹øÈ£(´Ù¸¥ µ¥ÀÌÅÍº£ÀÌ½º ¾µ °æ¿ì ¼öÁ¤)
-	String url = "jdbc:mysql://localhost:3306/gameuser?serverTimezone=UTC"; //URL(´Ù¸¥ µ¥ÀÌÅÍº£ÀÌ½º ¾µ °æ¿ì ¼öÁ¤)
+	Connection conn;                     //DB ì»¤ë„¥ì…˜ ì—°ê²° ê°ì²´
+	String edit_ID = "root";             //DB ì—°ê²° ì•„ì´ë””(ë‹¤ë¥¸ ë°ì´í„°ë² ì´ìŠ¤ ì“¸ ê²½ìš° ìˆ˜ì •)
+	String edit_PASSWORD = "ghtjd020709!";   //ë¹„ë°€ë²ˆí˜¸(ë‹¤ë¥¸ ë°ì´í„°ë² ì´ìŠ¤ ì“¸ ê²½ìš° ìˆ˜ì •)
+	String url = "jdbc:mysql://localhost:3306/gameuser?serverTimezone=UTC"; //URL(ë‹¤ë¥¸ ë°ì´í„°ë² ì´ìŠ¤ ì“¸ ê²½ìš° ìˆ˜ì •)
 	Statement stmt;
 	ResultSet result;
 	
-	int flag = -1; 	//¹öÆ°ÀÌ ´­¸° »óÅÂ Ç¥½Ã(0Àº ½Ã°£, 1Àº È½¼ö, -1Àº ¾ÆÁ÷ ¹öÆ°À» ´©¸£Áö ¾ÊÀº »óÅÂ(ÃÊ±âÈ­¸é))
+	int flag = -1; 	//ë²„íŠ¼ì´ ëˆŒë¦° ìƒíƒœ í‘œì‹œ(0ì€ ì‹œê°„, 1ì€ íšŸìˆ˜, -1ì€ ì•„ì§ ë²„íŠ¼ì„ ëˆ„ë¥´ì§€ ì•Šì€ ìƒíƒœ(ì´ˆê¸°í™”ë©´))
 	
 	public Rank() {
 		 
         this.setTitle("Rank");
-        JButton back = new JButton("µÚ·Î");
+        JButton back = new JButton("ë’¤ë¡œ");
         
         setSize(620, 650);
         setLayout(null);
@@ -43,9 +49,9 @@ public class Rank extends JFrame{
             conn = DriverManager.getConnection(url, edit_ID, edit_PASSWORD);
             stmt = conn.createStatement();
         }catch(ClassNotFoundException e1) {
-      	  System.out.println("JDBC µå·¯ÀÌ¹ö ·Îµå ¿À·ù");
+      	  System.out.println("JDBC ë“œëŸ¬ì´ë²„ ë¡œë“œ ì˜¤ë¥˜");
         }catch(SQLException e1) {
-      	  System.out.println("DB ¿¬°á ¿À·ù");
+      	  System.out.println("DB ì—°ê²° ì˜¤ë¥˜");
         }
         
         back.setBounds(270, 550, 70, 40);
@@ -54,10 +60,10 @@ public class Rank extends JFrame{
         add(this.title);
         add(back);
         
-        String []levelSt = {"Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6"}; //·¹º§ ¸î±îÁö ÀÖ´Â Áö °áÁ¤µÇÁö ¾Ê¾Æ¼­ 6±îÁö¸¸ ÇØµÒ
+        String []levelSt = {"Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6"}; //ë ˆë²¨ ëª‡ê¹Œì§€ ìˆëŠ” ì§€ ê²°ì •ë˜ì§€ ì•Šì•„ì„œ 6ê¹Œì§€ë§Œ í•´ë‘ 
         this.levelBox = new JComboBox(levelSt);
-        this.timeRank = new JButton("ÃÖ´Ü ½Ã°£ ·©Å©");
-        this.countRank = new JButton("ÃÖ¼Ò È½¼ö ·©Å©");
+        this.timeRank = new JButton("ìµœë‹¨ ì‹œê°„ ë­í¬");
+        this.countRank = new JButton("ìµœì†Œ íšŸìˆ˜ ë­í¬");
         this.rankArea = new JTextArea(30, 15);
         this.rankArea.setEditable(false);
         
@@ -71,7 +77,7 @@ public class Rank extends JFrame{
         add(this.countRank);
         add(this.rankArea);
         
-        //¸Ş´ºÈ­¸éÀ¸·Î
+        //ë©”ë‰´í™”ë©´ìœ¼ë¡œ
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -80,7 +86,7 @@ public class Rank extends JFrame{
                 
             }
         });
-        //È½¼ö ¹öÆ° ´­¸° »óÅÂ
+        //íšŸìˆ˜ ë²„íŠ¼ ëˆŒë¦° ìƒíƒœ
         this.countRank.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
@@ -89,7 +95,7 @@ public class Rank extends JFrame{
         		flag = 1;
         	}
         });
-        //½Ã°£ ¹öÆ° ´­¸° »óÅÂ
+        //ì‹œê°„ ë²„íŠ¼ ëˆŒë¦° ìƒíƒœ
         this.timeRank.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
@@ -98,33 +104,33 @@ public class Rank extends JFrame{
         		flag = 0;
         	}
         });
-        //ÄŞº¸¹Ú½º(·¹º§) ¼±ÅÃ¿¡ µû¸¥ textArea Ãâ·Â
+        //ì½¤ë³´ë°•ìŠ¤(ë ˆë²¨) ì„ íƒì— ë”°ë¥¸ textArea ì¶œë ¥
         this.levelBox.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
         		JComboBox cb = (JComboBox)e.getSource();
         		int index = cb.getSelectedIndex() + 1;
-        		//È½¼ö ¹öÆ°ÀÌ Å¬¸¯µÈ »óÅÂÀÏ ¶§
+        		//íšŸìˆ˜ ë²„íŠ¼ì´ í´ë¦­ëœ ìƒíƒœì¼ ë•Œ
         		if(flag == 1) {
         			try {
         				result = stmt.executeQuery("select id, count from usertable where level =" + index +  " order by count");
-        				rankArea.setText("¾ÆÀÌµğ\t     ÀÌµ¿È½¼ö\n");
+        				rankArea.setText("ì•„ì´ë””\t     ì´ë™íšŸìˆ˜\n");
         				while(result.next()) {
         					rankArea.append(result.getString(1) + "\t     " + result.getInt(2) + "\n");
         				}
         			}catch(SQLException e1) {
-        				System.out.println("DB ¿¬°á ¿À·ù");
+        				System.out.println("DB ì—°ê²° ì˜¤ë¥˜");
         			}
         		}
         		else if(flag == 0) {
         			try {
         				result = stmt.executeQuery("select id, time from usertable where level =" + index +  " order by time");
-        				rankArea.setText("¾ÆÀÌµğ\t     ½Ã°£\n");
+        				rankArea.setText("ì•„ì´ë””\t     ì‹œê°„\n");
         				while(result.next()) {
         					rankArea.append(result.getString(1) + "\t     " + result.getTime(2) + "\n");
         				}
         			}catch(Exception e1) {
-        				System.out.println("DB ¿¬°á ¿À·ù");
+        				System.out.println("DB ì—°ê²° ì˜¤ë¥˜");
         			}
         		}
         	}
