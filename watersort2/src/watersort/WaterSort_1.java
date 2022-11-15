@@ -6,17 +6,13 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Stack;
 
-
-
 class WaterSort_main extends JFrame{
 	
-    public Character red;
-    public Character blue;
-    public Character green;
-    public Character pink;
-    public int maxColours;
+	public int Level;
+	public int Colors[];
+    public int maxColors;
     public int maxBottles;
-    public int MovesMade;
+    public int MoveCnt;
     public int To;
     public int From;
     public int count;
@@ -26,9 +22,10 @@ class WaterSort_main extends JFrame{
     public JLabel[] bottlelabel;
     public Thread th2;
     public Thread th3;
-    public ArrayList<Character> bottles[];
-    public Stack<Character> colours;
-    public Stack<Character> Moves;
+    public ArrayList<Integer> bottles[];
+    public Stack<Integer> colors;
+    public Stack<Integer> Moves;
+    public Stack<Integer> BackMovesCounter;
     public JButton btn3;
     public JLabel timelabel2;
     public Timer runnable2;
@@ -36,24 +33,40 @@ class WaterSort_main extends JFrame{
     public int rand_bottle;
     public int x1;
     public int count2;
-    public char temp;
+    public int temp;
     public int x2;
     public int excount;
     public int excount2;
     public JLabel click;
     public int undoto;
     public int undofrom;
+    public int peekcount;
+    public JButton Undobutton;
+    public int Xposition;
+    public int Yposition;
     
     class Counter extends JFrame implements Runnable{
-    	
+    	Clear clear = new Clear();
     	public void run() {
     	
     		while(true) {
     			try {
     				Thread.sleep(100);
-    				operation(bottles, Moves);
+    				operation(bottles, Moves, BackMovesCounter);
     				if(Solved(bottles) == true) {
-    		        	
+    					
+    					if(Level == 1) {
+    		        		clear.run(1);
+    		        	}
+    		        	else if(Level == 2) {
+    		        		clear.run(2);
+    		        	}
+    		        	else if(Level == 3) {
+    		        		clear.run(3);
+    		        	}
+    		        	else if(Level == 4) {
+    		        		clear.run(4);
+    		        	}
     		        	th2.interrupt();
     		        	th3.interrupt();
     		        	break;
@@ -63,68 +76,129 @@ class WaterSort_main extends JFrame{
     				
     				e.printStackTrace();
     			}
-    			
     		}
-    		
     	}
-
     }
-
     
-	public WaterSort_main() {
-		
-		red = new Character('r');
-		blue = new Character('b');
-		green = new Character('g');
-		pink = new Character('p');
-		
-		maxColours = 4;
+    public void Level1() {
+    	
+    	Level = 1;
+    	maxColors = 4;
 		maxBottles = 6;
-		MovesMade = 0;
-		
-		To = 7;
-		From = 7;
-		
-		count = 0;
-		backcount = 2;
-		
+    	
+    	Colors = new int[maxColors];
+    	for(int i = 0; i < maxColors; i++) {
+    		Colors[i] = i;
+    	}
+    	
 		jb = new JLabel[30];
-		jjb = new JLabel[7];
-		bottlelabel = new JLabel[6];
+		jjb = new JLabel[maxBottles];
+		bottlelabel = new JLabel[maxBottles];
 		
-		bottles = new ArrayList[6];
-        bottles[0] = new ArrayList<Character>(maxColours);
-        bottles[1] = new ArrayList<Character>(maxColours);
-        bottles[2] = new ArrayList<Character>(maxColours);
-        bottles[3] = new ArrayList<Character>(maxColours);
-        bottles[4] = new ArrayList<Character>(maxColours);
-        bottles[5] = new ArrayList<Character>(maxColours);
+		bottles = new ArrayList[maxBottles];
+		for(int i = 0; i < maxBottles; i++) {
+			bottles[i] = new ArrayList<Integer>(maxColors);
+		}
         
-        colours = new Stack<>();
-        Moves = new Stack<>();
-
-        jjb[0] = new JLabel("");
-        jjb[1] = new JLabel("");
-        jjb[2] = new JLabel("");
-        jjb[3] = new JLabel("");
-        jjb[4] = new JLabel("");
-        jjb[5] = new JLabel("");
-        jjb[6] = new JLabel("back");
+        for(int i = 0; i < maxBottles; i++) {
+        	jjb[i] = new JLabel("");
+        }
         
-        bottlelabel[0] = new JLabel("");
-        bottlelabel[1] = new JLabel("");
-        bottlelabel[2] = new JLabel("");
-        bottlelabel[3] = new JLabel("");
-        bottlelabel[4] = new JLabel("");
-        bottlelabel[5] = new JLabel("");
+        for(int i = 0; i < maxBottles; i++) {
+        	bottlelabel[i] = new JLabel("");
+        }
+    }
+    
+    public void Level2() {
+    	
+    	Level = 2;
+    	maxColors = 5;
+		maxBottles = 7;
+    	
+    	Colors = new int[maxColors];
+    	for(int i = 0; i < maxColors; i++) {
+    		Colors[i] = i;
+    	}
+    	
+		jb = new JLabel[40];
+		jjb = new JLabel[maxBottles];
+		bottlelabel = new JLabel[maxBottles];
+		
+		bottles = new ArrayList[maxBottles];
+		for(int i = 0; i < maxBottles; i++) {
+			bottles[i] = new ArrayList<Integer>(maxColors);
+		}
         
-        setTitle("WaterSort");
-        setLayout(null);
-    	setSize(700,500);
+        for(int i = 0; i < maxBottles; i++) {
+        	jjb[i] = new JLabel("");
+        }
         
+        for(int i = 0; i < maxBottles; i++) {
+        	bottlelabel[i] = new JLabel("");
+        }
+    }
+    
+    public void Level3() {
+    	
+    	Level = 3;
+    	maxColors = 6;
+		maxBottles = 8;
+    	
+    	Colors = new int[maxColors];
+    	for(int i = 0; i < maxColors; i++) {
+    		Colors[i] = i;
+    	}
+    	
+		jb = new JLabel[40];
+		jjb = new JLabel[maxBottles];
+		bottlelabel = new JLabel[maxBottles];
+		
+		bottles = new ArrayList[maxBottles];
+		for(int i = 0; i < maxBottles; i++) {
+			bottles[i] = new ArrayList<Integer>(maxColors);
+		}
         
-        btn3 = new JButton("뒤로");
-        btn3.setLocation(500, 150);
+        for(int i = 0; i < maxBottles; i++) {
+        	jjb[i] = new JLabel("");
+        }
+        
+        for(int i = 0; i < maxBottles; i++) {
+        	bottlelabel[i] = new JLabel("");
+        }
+    }
+    
+    public void Level4() {
+    	
+    	Level = 4;
+    	maxColors = 7;
+		maxBottles = 9;
+    	
+    	Colors = new int[maxColors];
+    	for(int i = 0; i < maxColors; i++) {
+    		Colors[i] = i;
+    	}
+    	
+		jb = new JLabel[40];
+		jjb = new JLabel[maxBottles];
+		bottlelabel = new JLabel[maxBottles];
+		
+		bottles = new ArrayList[maxBottles];
+		for(int i = 0; i < maxBottles; i++) {
+			bottles[i] = new ArrayList<Integer>(maxColors);
+		}
+        
+        for(int i = 0; i < maxBottles; i++) {
+        	jjb[i] = new JLabel("");
+        }
+        
+        for(int i = 0; i < maxBottles; i++) {
+        	bottlelabel[i] = new JLabel("");
+        }
+    }
+    
+    public void BackButton() {
+    	btn3 = new JButton("뒤로");
+        btn3.setLocation(20, 20);
         btn3.setSize(100,50);
         btn3.setVisible(true);
         add(btn3);
@@ -137,43 +211,95 @@ class WaterSort_main extends JFrame{
             	setVisible(false);
             }
         });
-
-        for(int i = 0; i < 7;i++) {
-        	jjb[i].setLocation(i*100,40);
-        	jjb[i].setSize(80,80);
+    }
+    
+    public void UndoButton() {
+    	Undobutton = new JButton("back");
+        Undobutton.setLocation(480, 20);
+        Undobutton.setVisible(true);
+        Undobutton.setSize(100,50);
+        Undobutton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	if(backcount >= 0) {
+					To = 10;
+					From = 10;
+				}
+            }
+        });
+        add(Undobutton);
+    }
+    
+    public void Timetable() {
+    	timelabel2 = new JLabel();
+        timelabel2.setLocation(420, 20);
+        timelabel2.setSize(100,50);
+        timelabel2.setVisible(true);
+        timelabel2.setFont(new Font("Gothic", Font.ITALIC, 20));
+        runnable2 = new Timer(timelabel2);
+        th2 = new Thread(runnable2);
+        add(timelabel2);
+    }
+    
+    public void ClickPanel() {
+    	for(int i = 0; i < maxBottles;i++) {
+        	jjb[i].setLocation((600/(maxBottles+2)) + (600/(maxBottles+2))*i,140);
+        	jjb[i].setSize(40,80);
         	jjb[i].setVisible(true);
         	add(jjb[i]);
         	jjb[i].addMouseListener(new MyMouseListener());
         }
-        
-        timelabel2 = new JLabel();
-        timelabel2.setLocation(300, 150);
-        timelabel2.setSize(100,50);
-        timelabel2.setVisible(true);
-        timelabel2.setFont(new Font("Gothic", Font.ITALIC, 20));
+    }
 
-        runnable2 = new Timer(timelabel2);
-        th2 = new Thread(runnable2);
-        add(timelabel2);
+    
+	public WaterSort_main(int i) {
+		
+		if(i == 1) {
+			Level1();
+		}
+		else if(i == 2) {
+			Level2();
+		}
+		else if(i == 3) {
+			Level3();
+		}
+		else if(i == 4) {
+			Level4();
+		}
+		
+		MoveCnt = 0;
+		To = 100;
+		From = 100;
+		count = 0;
+		backcount = 2;
+		
+        colors = new Stack<>();
+        Moves = new Stack<>();
+        BackMovesCounter = new Stack<>();
         
+        setTitle("WaterSort");
+        setLayout(null);
+    	setSize(600,500);
+        
+        BackButton();
+        UndoButton();
+        Timetable();
+        ClickPanel();
+
         runnable3 = new Counter();
         th3 = new Thread(runnable3);
         
     	setLocationRelativeTo(null);
-        fillColourStack(colours);
+        fillcolorstack(colors);
 
-        for (int count = 0; count < 16; count++)
+        for (int count = 0; count < 4*maxColors; count++)
         {
-            fillBottles(bottles, colours);
+            fillBottles(bottles, colors);
         }
-
 
         showAll(bottles);
         th2.start();
         th3.start();
-        
-
-        
 	}
 	
     public void showAll(ArrayList bottles[]) {
@@ -184,53 +310,90 @@ class WaterSort_main extends JFrame{
     	}
     	int z = 0;
     	
-        for(int i = 0; i < 6;i++) {
+        for(int i = 0; i < maxBottles;i++) {
         	for(int j = 0; j < bottles[i].size(); j++) {
-        		if(bottles[i].get(j).equals(red)) {
+        		if((int)bottles[i].get(j) == 0) {
+        			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
+        			Yposition = 200-(j*20);
         			jb[z] = new JLabel("RED");
-        			jb[z].setSize(80,20);
+        			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.red);
-        			jb[z].setLocation(i*100,100-(j*20));
+        			jb[z].setLocation(Xposition, Yposition);
         			add(jb[z]);
         			z++;
         		}
-        		else if(bottles[i].get(j).equals(blue)) {
+        		else if((int)bottles[i].get(j) == 1) {
+        			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
+        			Yposition = 200-(j*20);
         			jb[z] = new JLabel("BLUE");
-        			jb[z].setSize(80,20);
+        			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.blue);
-        			jb[z].setLocation(i*100,100-(j*20));
+        			jb[z].setLocation(Xposition, Yposition);
         			add(jb[z]);
         			z++;
         		}
-        		else if(bottles[i].get(j).equals(green)) {
+        		else if((int)bottles[i].get(j) == 2) {
+        			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
+        			Yposition = 200-(j*20);
         			jb[z] = new JLabel("GREEN");
-        			jb[z].setSize(80,20);
+        			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.green);
-        			jb[z].setLocation(i*100,100-(j*20));
+        			jb[z].setLocation(Xposition, Yposition);
         			add(jb[z]);
         			z++;
         		}
-        		else if(bottles[i].get(j).equals(pink)) {
+        		else if((int)bottles[i].get(j) == 3) {
+        			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
+        			Yposition = 200-(j*20);
         			jb[z] = new JLabel("PINK");
-        			jb[z].setSize(80,20);
+        			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.pink);
-        			jb[z].setLocation(i*100,100-(j*20));
+        			jb[z].setLocation(Xposition, Yposition);
+        			add(jb[z]);
+        			z++;
+        		}
+        		else if((int)bottles[i].get(j) == 4) {
+        			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
+        			Yposition = 200-(j*20);
+        			jb[z] = new JLabel("CYAN");
+        			jb[z].setSize(40,20);
+        			jb[z].setOpaque(true);
+        			jb[z].setBackground(Color.cyan);
+        			jb[z].setLocation(Xposition, Yposition);
+        			add(jb[z]);
+        			z++;
+        		}
+        		else if((int)bottles[i].get(j) == 5) {
+        			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
+        			Yposition = 200-(j*20);
+        			jb[z] = new JLabel("GRAY");
+        			jb[z].setSize(40,20);
+        			jb[z].setOpaque(true);
+        			jb[z].setBackground(Color.gray);
+        			jb[z].setLocation(Xposition, Yposition);
+        			add(jb[z]);
+        			z++;
+        		}
+        		else if((int)bottles[i].get(j) == 6) {
+        			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
+        			Yposition = 200-(j*20);
+        			jb[z] = new JLabel("ORANGE");
+        			jb[z].setSize(40,20);
+        			jb[z].setOpaque(true);
+        			jb[z].setBackground(Color.orange);
+        			jb[z].setLocation(Xposition, Yposition);
         			add(jb[z]);
         			z++;
         		}
         		else {
         			jb[z] = new JLabel();
-        			
         		}
-        		
         	}
-        	
         }
-
         setVisible(true);
         paint(getGraphics());
     }
@@ -239,24 +402,22 @@ class WaterSort_main extends JFrame{
         return (int) ((Math.random() * (max - min)) + min);
     }
 
-    public void fillBottles(ArrayList bottles[], Stack colours) {
+    public void fillBottles(ArrayList bottles[], Stack colors) {
         rand_bottle = generateRandom(0, maxBottles-2);
-        if (bottles[rand_bottle].size() < maxColours)
+        if (bottles[rand_bottle].size() < 4)
         {
-            bottles[rand_bottle].add(colours.pop());
+            bottles[rand_bottle].add(colors.pop());
         } else {
-            fillBottles(bottles, colours);
+            fillBottles(bottles, colors);
         }
-
     }
 
-    public void fillColourStack(Stack colours) {
-        for (int x = maxColours; x > 0; x--)
+    public void fillcolorstack(Stack colors) {
+        for (int x = 0; x < 4; x++)
         {
-            colours.push(red);
-            colours.push(blue);
-            colours.push(green);
-            colours.push(pink);
+        	for(int i = 0; i < maxColors;i++) {
+        		colors.push(Colors[i]);
+        	}
         }
     }
     
@@ -277,7 +438,6 @@ class WaterSort_main extends JFrame{
             if(count2 > 2) {
             	return false;
             }
-              
     	  }
           return true;
     	}
@@ -295,21 +455,21 @@ class WaterSort_main extends JFrame{
         return true;
     }
     
-    public char peek(ArrayList bottles[], int x) {
+    public int peek(ArrayList bottles[], int x) {
     	temp = ' ';
     	x2 = x;
         if (bottles[x2].size() > 0)
-            temp = (char) bottles[x2].get(bottles[x2].size() - 1);
+            temp = (int) bottles[x2].get(bottles[x2].size() - 1);
         return temp;
     }
 
-    public boolean isValidMove(ArrayList bottles[], Stack Moves, int from, int to) {
+    public boolean isValidMove(ArrayList bottles[], Stack Moves, Stack BackMovesCounter, int from, int to) {
     	
         if (bottles[from].size() == 0) {
         	System.out.println("empty");
             return false;
         }
-        else if (bottles[to].size() >= maxColours) {
+        else if (bottles[to].size() >= maxColors) {
         	System.out.println("fill");
             return false;
         }
@@ -322,23 +482,21 @@ class WaterSort_main extends JFrame{
         {
         	excount = 0;
             do {
-            	excount++;
-            	System.out.println(bottles[from].size());
-            	bottles[to].add(bottles[from].get(bottles[from].size()-1));
-                bottles[from].remove(bottles[from].size()-1);
-                Moves.push(from);
-                Moves.push(to);
+            	if(bottles[to].size() <= 4) {
+                	bottles[to].add(bottles[from].get(bottles[from].size()-1));
+                    bottles[from].remove(bottles[from].size()-1);
+                    Moves.push(from);
+                    Moves.push(to);
+                    excount++;
+            	}
+            	else {
+            		break;
+            	}
 
             } while (peek(bottles, from) == peek(bottles,to));
-            if(bottles[to].size() > maxColours) {
-            	for(int i = 0; i < excount;i++) {
-            		Undo(bottles, Moves);
-            		System.out.println("undo");
-            	}
-            }
-            
-            MovesMade++;
-            System.out.println("moves : " + MovesMade );
+            BackMovesCounter.push(excount);
+            MoveCnt++;
+            System.out.println("moves : " + MoveCnt );
             return true;
         }
 
@@ -347,100 +505,85 @@ class WaterSort_main extends JFrame{
         	//to 물병의 최상단과 같을 때
         	excount2 = 0;
             do {
-                excount2++;
-                bottles[to].add(bottles[from].get(bottles[from].size()-1));
-                bottles[from].remove(bottles[from].size()-1);
-                Moves.push(from);
-                Moves.push(to);
+            	if(bottles[to].size() < 4) {
+            		bottles[to].add(bottles[from].get(bottles[from].size()-1));
+                    bottles[from].remove(bottles[from].size()-1);
+                    Moves.push(from);
+                    Moves.push(to);
+                    excount2++;
+            	}
+            	else {
+            		break;
+            	}
+                
                 
             } while (peek(bottles, from) == peek(bottles,to));
-            if(bottles[to].size() > maxColours) {
-            	for(int i = 0; i < excount2;i++) {
-            		Undo(bottles, Moves);
-            		System.out.println("undo");
-            	}
-            }
-            MovesMade++;
-            System.out.println("moves : " + MovesMade );
+            BackMovesCounter.push(excount2);
+            System.out.println("backmove = " + BackMovesCounter.peek());
+            MoveCnt++;
+            System.out.println("moves : " + MoveCnt );
             return true;
 
         } else {
             return false;
         }
-
     }
 
-    public void Undo(ArrayList bottles[], Stack Moves) {
-    	
+    public void Undo(ArrayList bottles[], Stack Moves, Stack BackMovesCounter) {
         if (Moves.peek() != null) {
-        	undoto = (int) (Moves.pop());
-            undofrom = (int) (Moves.pop());
-            bottles[undofrom].add(bottles[undoto].get(bottles[undoto].size()-1));
-            bottles[undoto].remove(bottles[undoto].size()-1);
+        	if(BackMovesCounter.peek() != null) {
+        		peekcount = (int)BackMovesCounter.peek();
+        		if((int)BackMovesCounter.peek() == 1) {
+        			undoto = (int) (Moves.pop());
+                    undofrom = (int) (Moves.pop());
+                    bottles[undofrom].add(bottles[undoto].get(bottles[undoto].size()-1));
+                    bottles[undoto].remove(bottles[undoto].size()-1);
+        		}
+        		else {
+        			while(peekcount > 0) {
+            			undoto = (int) (Moves.pop());
+                        undofrom = (int) (Moves.pop());
+                        bottles[undofrom].add(bottles[undoto].get(bottles[undoto].size()-1));
+                        bottles[undoto].remove(bottles[undoto].size()-1);
+                        peekcount--;
+                        
+            		}
+        		}
+        		BackMovesCounter.pop();
+        	}
+        	else {
+        		undoto = (int) (Moves.pop());
+                undofrom = (int) (Moves.pop());
+                bottles[undofrom].add(bottles[undoto].get(bottles[undoto].size()-1));
+                bottles[undoto].remove(bottles[undoto].size()-1);
+        	}
             showAll(bottles);
         }
     }
-    
-    public boolean validateInput(int val) {
-        boolean result = false;
-        switch (val) {
-        case 0:
-            result = true;
-            break;
-        case 1:
-            result = true;
-            break;
-        case 2:
-            result = true;
-            break;
-        case 3:
-            result = true;
-            break;
-        case 4:
-            result = true;
-            break;
-        case 5:
-            result = true;
-            break;
 
-        case 10:
-            result = true;
-            break;
-            
-        default:
-            result = false;
-            break;
-        }
-        return result;
-    }
-    
-
-    public void operation(ArrayList bottles[], Stack Moves) {
+    public void operation(ArrayList bottles[], Stack Moves, Stack BackMovesCounter) {
     	
     	try {
 			System.out.print("");
     		if (From == 10 && To == 10) {
-    			while(excount2 > 0) {
-    				System.out.println("excount2 =" + excount2);
-                    Undo(bottles, Moves);
-                    excount2--;
-    			}
+    			Undo(bottles, Moves, BackMovesCounter);
+    			System.out.println("backcount =" + backcount);
     			backcount--;
                 From = 7;
                 To = 7;
     		}
-    		else if(From != 7 && To != 7){
+    		else if(From != 100 && To != 100){
 
-                if (isValidMove(bottles, Moves, From, To)) {
+                if (isValidMove(bottles, Moves, BackMovesCounter, From, To)) {
                     System.out.println("move");
                     showAll(bottles);
-                    From = 7;
-                    To = 7;
+                    From = 100;
+                    To = 100;
                 } else {
                 	System.out.println("move ex");
                     showAll(bottles);
-                    From = 7;
-                    To = 7;
+                    From = 100;
+                    To = 100;
                 }
             }
     		else {
@@ -451,83 +594,26 @@ class WaterSort_main extends JFrame{
 	}
 }
     
-
-
     class MyMouseListener implements MouseListener{
-
+    	
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			
 		}
-
+		
 		@Override
 		public void mousePressed(MouseEvent e) {
 			click = (JLabel)e.getSource();
-			if(jjb[0] == click) {
-				if(count == 1) {
-					count--;
-					To = 0;
-				}
-				else {
-					count++;
-					From = 0;
-				}
-				
-			}
-			else if(jjb[1] == click){
-				if(count == 1) {
-					count--;
-					To = 1;
-				}
-				else {
-					count++;
-					From = 1;
-				}
-			}
-			else if(jjb[2] == click){
-				if(count == 1) {
-					count--;
-					To = 2;
-				}
-				else {
-					count++;
-					From = 2;
-				}
-			}
-			else if(jjb[3] == click){
-				if(count == 1) {
-					count--;
-					To = 3;
-				}
-				else {
-					count++;
-					From = 3;
-				}
-			}
-			else if(jjb[4] == click){
-				if(count == 1) {
-					count--;
-					To = 4;
-				}
-				else {
-					count++;
-					From = 4;
-				}
-			}
-			else if(jjb[5] == click){
-				if(count == 1) {
-					count--;
-					To = 5;
-				}
-				else {
-					count++;
-					From = 5;
-				}
-			}
-			else if(jjb[6] == click){
-				if(backcount >= 0) {
-					To = 10;
-					From = 10;
+			for(int i = 0; i < maxBottles; i++) {
+				if(jjb[i] == click) {
+					if(count == 1) {
+						count--;
+						To = i;
+					}
+					else {
+						count++;
+						From = i;
+					}
 				}
 			}
 		}
@@ -551,6 +637,6 @@ class WaterSort_main extends JFrame{
 
 public class WaterSort_1 {
 	public static void main(String args[]) {
-		new WaterSort_main();
+		new WaterSort_main(1);
     }
 }
