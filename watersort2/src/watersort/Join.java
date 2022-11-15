@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.util.regex.Pattern;
+
+//ÃÖ¼Ò ÀÌµ¿ ¼ø¼­´ë·Î ¼øÀ§ Á¤·Ä, µ¥ÀÌÅÍº£ÀÌ½º Å¬·¡½º¸¦ µû·Î ¸¸µé¾î¼­ ÀÌ¿ëÇÏ±â(Å¬·¡½º¸¶´Ù ÇÊ¿äÇÏ´Ùº¸´Ï ¾µµ¥¾øÀÌ Áßº¹µÊ)
 
 public class Join extends JFrame{
    
@@ -98,6 +101,7 @@ public class Join extends JFrame{
            @Override
            public void actionPerformed(ActionEvent e) {
               String s = idField.getText();
+              String pattern = "^[0-9|a-z|A-Z|¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]*$"; // °ø¹é È¤Àº Æ¯¼ö¹®ÀÚ°¡ ÀÔ·ÂµÈ °æ¿ì(ÀÚ¹Ù Á¤±Ô½Ä Âü°í)
               try {
                 result = stmt.executeQuery("select * from usertable"); //´Ù¸¥ Å×ÀÌºí ¾µ °æ¿ì usertable ¹Ù²Ù¸é µÊ
                 
@@ -107,9 +111,13 @@ public class Join extends JFrame{
                          overlapCheck = true; //Áßº¹µÈ °÷ ÀÖÀ» °æ¿ì
                      }
                   }
-                //¾ÆÀÌµð¸¦ ÀÔ·Â ¾ÈÇßÀ» °æ¿ì(³»°¡ ¿øÇÏ´Â ¹æÇâÀÌ ¾Æ´Ô)
-                if(s.equals("")) {
-                	JOptionPane.showMessageDialog(null, "¾ÆÀÌµð¸¦ ÀÔ·ÂÇÏÁö ¾Ê¾Ò½À´Ï´Ù", "ÀÔ·Â ¿À·ù", JOptionPane.ERROR_MESSAGE);
+                //¾ÆÀÌµð¸¦ ÀÔ·Â ¾ÈÇßÀ» °æ¿ì
+                if(s.replaceAll(" ", "").equals("")) {
+                	JOptionPane.showMessageDialog(null, "°ø¹é¸¸ ÀÔ·ÂµÇ¾ú½À´Ï´Ù", "ÀÔ·Â ¿À·ù", JOptionPane.ERROR_MESSAGE);
+                }
+                //¾ÆÀÌµð¿¡ °ø¹é È¤Àº Æ®¼ö¹®ÀÚ°¡ Æ÷ÇÔµÈ °æ¿ì
+                else if(!Pattern.matches(pattern, s)) {
+                	JOptionPane.showMessageDialog(null, "¾ÆÀÌµð¿¡ °ø¹é È¤Àº Æ¯¼ö¹®ÀÚ°¡ ÀÔ·ÂµÇ¾ú½À´Ï´Ù", "ÀÔ·Â ¿À·ù", JOptionPane.ERROR_MESSAGE);
                 }
                 //¾ÆÀÌµð Áßº¹µÇ¾úÀ» °æ¿ì
                 else if(overlapCheck) {
@@ -118,6 +126,7 @@ public class Join extends JFrame{
                }
                 else {
                 	JOptionPane.showMessageDialog(null, "Áßº¹µÈ ¾ÆÀÌµð°¡ ¾ø½À´Ï´Ù");
+                	idcheck.setEnabled(false); 	//¹öÆ° ºñÈ°¼ºÈ­
                 	idField.setEditable(false);
                 	idcheckcheck = false;
                 }
@@ -133,7 +142,7 @@ public class Join extends JFrame{
 				user_PASSWORD = new String(passField.getPassword());
 				user_PASSRE = new String(passCheckField.getPassword());
 
-				String sql = "insert into usertable values (?,?)";
+				String sql = "insert into usertable values (?, ?, ?, ?, ?)";
 				PreparedStatement pstmt = null;
 				
 				//ºñ¹Ð¹øÈ£°¡ µ¿ÀÏÇÏÁö ¾ÊÀ» °æ¿ì
@@ -154,6 +163,9 @@ public class Join extends JFrame{
 						pstmt = conn.prepareStatement(sql);												
 		                pstmt.setString(1, user_ID);
 		                pstmt.setString(2, user_PASSWORD);
+		                pstmt.setInt(3, 0);
+		                pstmt.setTime(4, null);
+		                pstmt.setInt(5, 0);
 		                pstmt.executeUpdate();
 		                
 						JOptionPane.showMessageDialog(null, "È¸¿ø °¡ÀÔ ¿Ï·á!", "È¸¿ø°¡ÀÔ", 1);
