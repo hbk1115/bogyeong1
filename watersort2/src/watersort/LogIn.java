@@ -6,7 +6,6 @@ import java.awt.event.*;
 
 public class LogIn extends JFrame{
 	
-	
 	JLabel title, nickName, password;
 	JTextField inputNickName, inputPassword;
 	JButton logIn, signUp, home;
