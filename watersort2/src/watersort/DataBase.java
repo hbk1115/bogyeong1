@@ -49,4 +49,15 @@ public class DataBase extends JFrame{
 		
 		return false;
 	}
+	
+	public ResultSet getResult(String sql) {
+		ResultSet result = null;
+		try {
+			result = stmt.executeQuery(sql);
+		} catch (SQLException e) {
+			System.out.println("SQL 오류");
+		}
+		
+		return result;
+	}
 }
