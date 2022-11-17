@@ -17,8 +17,10 @@ public class Level extends JFrame{
 	
 	private final int MAX_LEVEL = 6;
 	
+	Clear clearcheck;
+	
 	public Level() {
-		 
+		clearcheck = new Clear();
         this.setTitle("Level");
         setLayout(null);
         
@@ -64,7 +66,9 @@ public class Level extends JFrame{
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
 	            	setVisible(false);
-	            	new Level1();
+	            	if (e.getActionCommand().contains("1")) {
+	            		new Level1();
+	            	}
 	                
 	            }
 	        });

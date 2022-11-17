@@ -49,7 +49,6 @@ public class Main extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
             	setVisible(false);
-                //new Main2();
                 new LogIn();
             }
         });
