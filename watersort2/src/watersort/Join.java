@@ -6,7 +6,7 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.regex.Pattern;
 
-//ÃÖ¼Ò ÀÌµ¿ ¼ø¼­´ë·Î ¼øÀ§ Á¤·Ä, µ¥ÀÌÅÍº£ÀÌ½º Å¬·¡½º¸¦ µû·Î ¸¸µé¾î¼­ ÀÌ¿ëÇÏ±â(Å¬·¡½º¸¶´Ù ÇÊ¿äÇÏ´Ùº¸´Ï ¾µµ¥¾øÀÌ Áßº¹µÊ)
+//ÇÏ±â Àü¿¡ ÁöÀº´Ô µ¥ÀÌÅÍº£ÀÌ½º Å¬·¡½º °¡Á®¿À°í join ¼öÁ¤, rank´Â ÁöÀº´Ô rankÅ¬·¡½º °¡Á®¿Í¼­ °øµ¿ ¼øÀ§¿¡ ´ëÇÑ Ãâ·Â ¼öÁ¤
 
 public class Join extends JFrame{
    
@@ -26,17 +26,11 @@ public class Join extends JFrame{
     JButton create;                      //»ý¼º ¹öÆ° Å¬¸¯½Ã µ¥ÀÌÅÍº£ÀÌ½º¿¡ ÀúÀå   
     JButton back;                        //back ¹öÆ° Å¬¸¯½Ã ¸ÞÀÎÈ­¸é(Main)À¸·Î °¨ 
     boolean overlapCheck = false;        //¾ÆÀÌµð Áßº¹µÇ¾ú´ÂÁö Ã¼Å©
-   
-    Connection conn;                     //DB Ä¿³Ø¼Ç ¿¬°á °´Ã¼
-    String edit_ID = "root";             //DB ¿¬°á ¾ÆÀÌµð(´Ù¸¥ µ¥ÀÌÅÍº£ÀÌ½º ¾µ °æ¿ì ¼öÁ¤)
-    String edit_PASSWORD = "ghtjd020709!";   //ºñ¹Ð¹øÈ£(´Ù¸¥ µ¥ÀÌÅÍº£ÀÌ½º ¾µ °æ¿ì ¼öÁ¤)
+  
     String user_ID;                      //È¸¿ø°¡ÀÔ ID
     String user_PASSWORD;                //È¸¿ø°¡ÀÔ ºñ¹Ð¹øÈ£
     String user_PASSRE;					 //ºñ¹Ð¹øÈ£ È®ÀÎ
-    String url = "jdbc:mysql://localhost:3306/gameuser?serverTimezone=UTC"; //URL(´Ù¸¥ µ¥ÀÌÅÍº£ÀÌ½º ¾µ °æ¿ì ¼öÁ¤)
-    Statement stmt;
     ResultSet result;
-   
     public Join() {
         
     	this.setTitle("Join");
@@ -46,15 +40,7 @@ public class Join extends JFrame{
         setSize(600, 530);
         setLocationRelativeTo(null);
         
-        try {
-        	Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection(url, edit_ID, edit_PASSWORD);
-            stmt = conn.createStatement();
-        }catch(ClassNotFoundException e1) {
-      	  System.out.println("JDBC µå·¯ÀÌ¹ö ·Îµå ¿À·ù");
-        }catch(SQLException e1) {
-      	  System.out.println("DB ¿¬°á ¿À·ù");
-        }
+        DataBase db = new DataBase();
         
         this.id = new JLabel("¾ÆÀÌµð");
         this.idField = new JTextField(20);
@@ -103,10 +89,10 @@ public class Join extends JFrame{
               String s = idField.getText();
               String pattern = "^[0-9|a-z|A-Z|¤¡-¤¾|¤¿-¤Ó|°¡-ÆR]*$"; // °ø¹é È¤Àº Æ¯¼ö¹®ÀÚ°¡ ÀÔ·ÂµÈ °æ¿ì(ÀÚ¹Ù Á¤±Ô½Ä Âü°í)
               try {
-                result = stmt.executeQuery("select * from usertable"); //´Ù¸¥ Å×ÀÌºí ¾µ °æ¿ì usertable ¹Ù²Ù¸é µÊ
+                result = db.getResult("select * from user"); //´Ù¸¥ Å×ÀÌºí ¾µ °æ¿ì user ¹Ù²Ù¸é µÊ
                 
                 while(result.next()) {
-                     String user_ID = result.getString("id");
+                     String user_ID = result.getString("username");
                      if(s.equals(user_ID)) {
                          overlapCheck = true; //Áßº¹µÈ °÷ ÀÖÀ» °æ¿ì
                      }
@@ -141,9 +127,6 @@ public class Join extends JFrame{
 				user_ID = idField.getText();
 				user_PASSWORD = new String(passField.getPassword());
 				user_PASSRE = new String(passCheckField.getPassword());
-
-				String sql = "insert into usertable values (?, ?, ?, ?, ?)";
-				PreparedStatement pstmt = null;
 				
 				//ºñ¹Ð¹øÈ£°¡ µ¿ÀÏÇÏÁö ¾ÊÀ» °æ¿ì
 				if (!user_PASSWORD.equals(user_PASSRE)) {													
@@ -160,19 +143,21 @@ public class Join extends JFrame{
 				}
 				else {																				
 					try {
-						pstmt = conn.prepareStatement(sql);												
-		                pstmt.setString(1, user_ID);
-		                pstmt.setString(2, user_PASSWORD);
-		                pstmt.setInt(3, 0);
-		                pstmt.setTime(4, null);
-		                pstmt.setInt(5, 0);
+						String sql = "insert into user values (?, ?, ?)";
+						PreparedStatement pstmt;
+						
+						pstmt = db.getPstmt(sql);
+						pstmt.setInt(1, 0);
+		                pstmt.setString(2, user_ID);
+		                pstmt.setString(3, user_PASSWORD);
 		                pstmt.executeUpdate();
-		                
-						JOptionPane.showMessageDialog(null, "È¸¿ø °¡ÀÔ ¿Ï·á!", "È¸¿ø°¡ÀÔ", 1);
+		                JOptionPane.showMessageDialog(null, "È¸¿ø °¡ÀÔ ¿Ï·á!", "È¸¿ø°¡ÀÔ", 1);
 																								
-						setVisible(false);			//¸ÞÀÎ È­¸éÀ¸·Î µ¹¾Æ°¨
-						new Main();
-					} catch (SQLException e1) {}
+		                setVisible(false);			//¸ÞÀÎ È­¸éÀ¸·Î µ¹¾Æ°¨
+		                new Main();
+					} catch (SQLException e1) {
+						System.out.println("¿À·ù");
+					}
 				}
 			}
 		});
