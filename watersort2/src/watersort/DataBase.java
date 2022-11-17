@@ -32,22 +32,34 @@ public class DataBase extends JFrame{
 
     }
 
-	public boolean checkLogIn(String userName, String password) {
+	public int checkLogIn(String userName, String password) {
 		try {
-			String logInSql = "select password from user where username='" + userName + "';";
+			String logInSql = "select id, password from user where username='" + userName + "';";
 			
 			ResultSet result = stmt.executeQuery(logInSql);
 			
 			while (result.next()) {
 				if (password.equals(result.getString("password"))) {
-					return true;
+					return result.getInt(1);
 				}
 			}
 		} catch (SQLException e) {
 			System.out.println("로그인 SQL 오류");
 		}
 		
-		return false;
+		return 0;
+	}
+	
+	public boolean updateResult(String sql) {
+		System.out.println(sql);
+		try {
+			stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			System.out.println("update SQL 오류");
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public ResultSet getResult(String sql) {
@@ -55,7 +67,7 @@ public class DataBase extends JFrame{
 		try {
 			result = stmt.executeQuery(sql);
 		} catch (SQLException e) {
-			System.out.println("SQL 오류");
+			System.out.println("get SQL 오류");
 		}
 		
 		return result;

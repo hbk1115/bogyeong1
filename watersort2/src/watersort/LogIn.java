@@ -9,17 +9,20 @@ public class LogIn extends JFrame{
 	JLabel title, nickName, password;
 	JTextField inputNickName, inputPassword;
 	JButton logIn, signUp, home;
+	static int userId;
 	
 	public LogIn() {
-		setTitle("LogIn");
-        setSize(500, 500);
-        setLayout(null);
-        
-        logInLayout();
-        
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
+		if (userId == 0) {
+			setTitle("LogIn");
+	        setSize(500, 500);
+	        setLayout(null);
+	        
+	        logInLayout();
+	        
+	        setLocationRelativeTo(null);
+	        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+	        setVisible(true);
+		}
 	}
 	
 	public void logInLayout() {
@@ -68,6 +71,10 @@ public class LogIn extends JFrame{
 		
 	}
 	
+	public int getUserId() {
+		return userId;
+	}
+	
 	class LogInListener implements ActionListener {
 
 		@Override
@@ -79,8 +86,11 @@ public class LogIn extends JFrame{
 				JOptionPane.showMessageDialog(null, "아이디와 비밀번호를 입력해주세요.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
 			} else {
 				DataBase db = new DataBase();
-				if (db.checkLogIn(userName, userPassword)) {
+				int id = db.checkLogIn(userName, userPassword);
+				if (id != 0) {
 					JOptionPane.showMessageDialog(null, "로그인에 성공하셨습니다.");
+					// 세션 부여
+					userId = id;
 					setVisible(false);
 					new Main2();
 				} else {
