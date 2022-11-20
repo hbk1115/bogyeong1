@@ -28,7 +28,7 @@ class WaterSort_main extends JFrame{
     public Stack<Integer> BackMovesCounter;
     public JButton btn3;
     public JLabel timelabel2;
-    public Timer runnable2;
+    //public Timer runnable2;
     public Counter runnable3;
     public int rand_bottle;
     public int x1;
@@ -44,40 +44,76 @@ class WaterSort_main extends JFrame{
     public JButton Undobutton;
     public int Xposition;
     public int Yposition;
+    public ImageIcon image;
+    public Image img;
+    public Image changeImg;
+    public ImageIcon changeIcon;
+    public ImageIcon image2;
+    public Image img2;
+    public Image changeImg2;
+    public ImageIcon changeIcon2;
+    public int postbottle;
+    
+    public int second;
+    public int millisecond;
     
     class Counter extends JFrame implements Runnable{
     	Clear clear = new Clear();
-    	public void run() {
+    	public JLabel timel;
+    	public int n2;
+    	public int n;
     	
+    	public Counter(JLabel timel) {
+    		this.timel = timel;
+    		this.n2 = 0;
+    		this.n = 0;
+    	}
+    	
+    	public void run() {	
     		while(true) {
     			try {
-    				Thread.sleep(100);
+    				++n2;
+    				if(n2 == 10) {
+    					n2 = 0;
+    					++n;
+    				}
+        			second = n;
+            		millisecond = n2;
+            		timel.setText(Integer.toString(n) +  " : " + Integer.toString(n2));
+    				
     				operation(bottles, Moves, BackMovesCounter);
     				if(Solved(bottles) == true) {
     					
     					if(Level == 1) {
     		        		clear.run(1);
+    		        		System.out.println("시간 = " + second + ":" + millisecond);
     		        	}
     		        	else if(Level == 2) {
     		        		clear.run(2);
+    		        		System.out.println("시간 = " + second + ":" + millisecond);
     		        	}
     		        	else if(Level == 3) {
     		        		clear.run(3);
+    		        		System.out.println("시간 = " + second + ":" + millisecond);
     		        	}
     		        	else if(Level == 4) {
     		        		clear.run(4);
+    		        		System.out.println("시간 = " + second + ":" + millisecond);
     		        	}
-    		        	th2.interrupt();
     		        	th3.interrupt();
     		        	break;
 
     		        }
+    				Thread.sleep(100);
     			} catch (InterruptedException e) {
-    				
     				e.printStackTrace();
     			}
     		}
     	}
+    }
+    
+    public void Image() {
+    	
     }
     
     public void Level1() {
@@ -100,8 +136,8 @@ class WaterSort_main extends JFrame{
 			bottles[i] = new ArrayList<Integer>(maxColors);
 		}
         
-        for(int i = 0; i < maxBottles; i++) {
-        	jjb[i] = new JLabel("");
+		for(int i = 0; i < maxBottles; i++) {
+        	jjb[i] = new JLabel(changeIcon);
         }
         
         for(int i = 0; i < maxBottles; i++) {
@@ -129,8 +165,8 @@ class WaterSort_main extends JFrame{
 			bottles[i] = new ArrayList<Integer>(maxColors);
 		}
         
-        for(int i = 0; i < maxBottles; i++) {
-        	jjb[i] = new JLabel("");
+		for(int i = 0; i < maxBottles; i++) {
+        	jjb[i] = new JLabel(changeIcon);
         }
         
         for(int i = 0; i < maxBottles; i++) {
@@ -158,8 +194,8 @@ class WaterSort_main extends JFrame{
 			bottles[i] = new ArrayList<Integer>(maxColors);
 		}
         
-        for(int i = 0; i < maxBottles; i++) {
-        	jjb[i] = new JLabel("");
+		for(int i = 0; i < maxBottles; i++) {
+        	jjb[i] = new JLabel(changeIcon);
         }
         
         for(int i = 0; i < maxBottles; i++) {
@@ -187,8 +223,8 @@ class WaterSort_main extends JFrame{
 			bottles[i] = new ArrayList<Integer>(maxColors);
 		}
         
-        for(int i = 0; i < maxBottles; i++) {
-        	jjb[i] = new JLabel("");
+		for(int i = 0; i < maxBottles; i++) {
+        	jjb[i] = new JLabel(changeIcon);
         }
         
         for(int i = 0; i < maxBottles; i++) {
@@ -207,7 +243,7 @@ class WaterSort_main extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
             	new Main2();
-            	th2.interrupt();
+            	th3.interrupt();
             	setVisible(false);
             }
         });
@@ -236,15 +272,15 @@ class WaterSort_main extends JFrame{
         timelabel2.setSize(100,50);
         timelabel2.setVisible(true);
         timelabel2.setFont(new Font("Gothic", Font.ITALIC, 20));
-        runnable2 = new Timer(timelabel2);
-        th2 = new Thread(runnable2);
+        runnable3 = new Counter(timelabel2);
+        th3 = new Thread(runnable3);
         add(timelabel2);
     }
     
     public void ClickPanel() {
     	for(int i = 0; i < maxBottles;i++) {
-        	jjb[i].setLocation((600/(maxBottles+2)) + (600/(maxBottles+2))*i,140);
-        	jjb[i].setSize(40,80);
+        	jjb[i].setLocation((600/(maxBottles+2)) + (600/(maxBottles+2))*i,137);
+        	jjb[i].setSize(40,90);
         	jjb[i].setVisible(true);
         	add(jjb[i]);
         	jjb[i].addMouseListener(new MyMouseListener());
@@ -254,7 +290,29 @@ class WaterSort_main extends JFrame{
     
 	public WaterSort_main(int i) {
 		
-		if(i == 1) {
+		postbottle = 100;
+		MoveCnt = 0;
+		To = 100;
+		From = 100;
+		count = 0;
+		backcount = 2;
+        colors = new Stack<>();
+        Moves = new Stack<>();
+        BackMovesCounter = new Stack<>();
+        
+        image = new ImageIcon("bottle.png");
+        img = image.getImage();
+        changeImg = img.getScaledInstance(140, 170, Image.SCALE_FAST);
+        changeIcon = new ImageIcon(changeImg);
+        
+        image2 = new ImageIcon("bottle3.png");
+        img2 = image2.getImage();
+        changeImg2 = img2.getScaledInstance(140, 170, Image.SCALE_FAST);
+        changeIcon2 = new ImageIcon(changeImg2);
+        
+        
+        
+        if(i == 1) {
 			Level1();
 		}
 		else if(i == 2) {
@@ -266,30 +324,20 @@ class WaterSort_main extends JFrame{
 		else if(i == 4) {
 			Level4();
 		}
-		
-		MoveCnt = 0;
-		To = 100;
-		From = 100;
-		count = 0;
-		backcount = 2;
-		
-        colors = new Stack<>();
-        Moves = new Stack<>();
-        BackMovesCounter = new Stack<>();
         
         setTitle("WaterSort");
         setLayout(null);
     	setSize(600,500);
+    	setLocationRelativeTo(null);
         
         BackButton();
         UndoButton();
         Timetable();
         ClickPanel();
 
-        runnable3 = new Counter();
-        th3 = new Thread(runnable3);
-        
-    	setLocationRelativeTo(null);
+        //runnable3 = new Counter(timelabel2);
+        //th3 = new Thread(runnable3);
+        	
         fillcolorstack(colors);
 
         for (int count = 0; count < 4*maxColors; count++)
@@ -298,7 +346,7 @@ class WaterSort_main extends JFrame{
         }
 
         showAll(bottles);
-        th2.start();
+        //th2.start();
         th3.start();
 	}
 	
@@ -315,7 +363,7 @@ class WaterSort_main extends JFrame{
         		if((int)bottles[i].get(j) == 0) {
         			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
         			Yposition = 200-(j*20);
-        			jb[z] = new JLabel("RED");
+        			jb[z] = new JLabel("");
         			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.red);
@@ -326,7 +374,7 @@ class WaterSort_main extends JFrame{
         		else if((int)bottles[i].get(j) == 1) {
         			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
         			Yposition = 200-(j*20);
-        			jb[z] = new JLabel("BLUE");
+        			jb[z] = new JLabel("");
         			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.blue);
@@ -337,7 +385,7 @@ class WaterSort_main extends JFrame{
         		else if((int)bottles[i].get(j) == 2) {
         			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
         			Yposition = 200-(j*20);
-        			jb[z] = new JLabel("GREEN");
+        			jb[z] = new JLabel("");
         			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.green);
@@ -348,7 +396,7 @@ class WaterSort_main extends JFrame{
         		else if((int)bottles[i].get(j) == 3) {
         			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
         			Yposition = 200-(j*20);
-        			jb[z] = new JLabel("PINK");
+        			jb[z] = new JLabel("");
         			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.pink);
@@ -359,7 +407,7 @@ class WaterSort_main extends JFrame{
         		else if((int)bottles[i].get(j) == 4) {
         			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
         			Yposition = 200-(j*20);
-        			jb[z] = new JLabel("CYAN");
+        			jb[z] = new JLabel("");
         			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.cyan);
@@ -370,7 +418,7 @@ class WaterSort_main extends JFrame{
         		else if((int)bottles[i].get(j) == 5) {
         			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
         			Yposition = 200-(j*20);
-        			jb[z] = new JLabel("GRAY");
+        			jb[z] = new JLabel("");
         			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.gray);
@@ -381,7 +429,7 @@ class WaterSort_main extends JFrame{
         		else if((int)bottles[i].get(j) == 6) {
         			Xposition = (600/(maxBottles+2)) + (600/(maxBottles+2))*i;
         			Yposition = 200-(j*20);
-        			jb[z] = new JLabel("ORANGE");
+        			jb[z] = new JLabel("");
         			jb[z].setSize(40,20);
         			jb[z].setOpaque(true);
         			jb[z].setBackground(Color.orange);
@@ -557,6 +605,7 @@ class WaterSort_main extends JFrame{
                 bottles[undofrom].add(bottles[undoto].get(bottles[undoto].size()-1));
                 bottles[undoto].remove(bottles[undoto].size()-1);
         	}
+        	System.out.println("ssssssssssssss");
             showAll(bottles);
         }
     }
@@ -607,12 +656,16 @@ class WaterSort_main extends JFrame{
 			for(int i = 0; i < maxBottles; i++) {
 				if(jjb[i] == click) {
 					if(count == 1) {
+						jjb[postbottle].setIcon(changeIcon);
 						count--;
 						To = i;
+						postbottle = 100;
 					}
 					else {
+						jjb[i].setIcon(changeIcon2);
 						count++;
 						From = i;
+						postbottle = i;
 					}
 				}
 			}

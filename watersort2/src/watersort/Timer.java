@@ -5,9 +5,9 @@ import javax.swing.JLabel;
 
 public class Timer extends JFrame implements Runnable{
 	
-	private JLabel timel;
-	int n2;
-	int n;
+	public JLabel timel;
+	public int n2;
+	public int n;
 	
 	public Timer(JLabel timel) {
 		this.timel = timel;
