@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 public class Rank extends JFrame{
 	
+	//게임 끝나면 새 창을 띄워서 그 창에 게임 클리어 정보 넣기(하기 전에 다른 분들 소스 가져와야함)
+	
 	private JLabel title;
 	
 	private JButton timeRank;		//시간 랭크

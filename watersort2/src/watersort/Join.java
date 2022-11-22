@@ -6,7 +6,6 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.regex.Pattern;
 
-//하기 전에 지은님 데이터베이스 클래스 가져오고 join 수정, rank는 지은님 rank클래스 가져와서 공동 순위에 대한 출력 수정
 
 public class Join extends JFrame{
    
