@@ -5,22 +5,32 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Join extends JFrame{
+	
+	private JButton backBtn;
+	
 	public Join() {
-		 
-        this.setTitle("Join");
+		setJoinLayout();
+        
+		backAction();
+    }
+	
+	private void setJoinLayout() {
+		this.setTitle("Join");
         JPanel jPanel = new JPanel();
-        JButton btn3 = new JButton("뒤로");
+        backBtn = new JButton("뒤로");
         
         setSize(500, 500);
-        jPanel.add(btn3);
+        jPanel.add(backBtn);
         add(jPanel);
         
         setLocationRelativeTo(null);
  
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        
-        btn3.addActionListener(new ActionListener() {
+	}
+
+	private void backAction() {
+		backBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	setVisible(false);
@@ -28,6 +38,5 @@ public class Join extends JFrame{
                 
             }
         });
-    }
-
+	}
 }

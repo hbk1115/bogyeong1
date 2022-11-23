@@ -5,32 +5,46 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Startgame extends JFrame{
+	
+	private JButton backBtn;
+	
 	public Startgame() {
 		 
-        this.setTitle("Level");
+		setStartGameLayout();
+        
+		setDimension();
+       
+        backAction();
+    }
+
+	private void setStartGameLayout() {
+		this.setTitle("Level");
         JPanel jPanel = new JPanel();
-        JButton btn3 = new JButton("뒤로");
+        backBtn = new JButton("뒤로");
         
         setSize(500, 500);
-        jPanel.add(btn3);
+        jPanel.add(backBtn);
         add(jPanel);
         
-        Dimension frameSize = getSize();
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
+	}
+	
+	private void setDimension() {
+		Dimension frameSize = getSize();
         
         Dimension windowSize = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation((windowSize.width - frameSize.width) / 2,
                 (windowSize.height - frameSize.height) / 2);
- 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
-        
-        btn3.addActionListener(new ActionListener() {
+	}
+	
+	private void backAction() {
+		backBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	new Main2();
+            	new Menu();
                 setVisible(false);
             }
         });
-    }
-
+	}
 }

@@ -4,8 +4,10 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Level2 {
-	public int level2 = 2;
+	private int level2 = 2;
+	
 	public Level2() {
-		new WaterSort_main(level2);
+		WaterSortGame waterSortGame = new WaterSortGame();
+		waterSortGame.play(level2);
 	}
 }

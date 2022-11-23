@@ -16,6 +16,7 @@ public class DataBase extends JFrame{
 	private final String url = "jdbc:mysql://localhost:3306/watersort?serverTimezone=UTC";
 	private final String id = "root";
 	private final String pw = "angel21124";
+	
 	public DataBase() {
 		
 		try {

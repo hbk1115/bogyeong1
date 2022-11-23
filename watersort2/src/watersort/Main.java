@@ -4,56 +4,66 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Main extends JFrame{
+public class Main extends JFrame {
 	
-	JLabel jLabel;
-	JPanel jPanel;
-    JButton btn1;
-    JButton btn2;
-    JButton btn3;
+	private JLabel gameTitle;
+	private JPanel jPanel;
+	private JButton loginBtn;
+	private JButton joinBtn;
+	private JButton exitBtn;
+    
+	public void start() {
+		setMainLayout();
+		clickAction();
+    }
 	
-	public Main() {
-		Ma();
-	}
-	
-	public void Ma() {
-		
-        setTitle("Main");
+	private void setMainLayout() {
+		setTitle("Main");
         setLayout(null);
         
         jPanel = new JPanel();
         jPanel.setLayout(new GridLayout(3, 1, 10, 10));
-        btn1 = new JButton("로그인");
-        btn2 = new JButton("회원가입");
-        btn3 = new JButton("게임 종료");
+        loginBtn = new JButton("로그인");
+        joinBtn = new JButton("회원가입");
+        exitBtn = new JButton("게임 종료");
         
-        jPanel.add(btn1);
-        jPanel.add(btn2);
-        jPanel.add(btn3);
+        jPanel.add(loginBtn);
+        jPanel.add(joinBtn);
+        jPanel.add(exitBtn);
         jPanel.setBounds(120, 180, 250, 200);
         
-        jLabel = new JLabel("WaterSort Game!!");
-        jLabel.setHorizontalAlignment(JLabel.CENTER);
-        jLabel.setFont(new Font("Gothic", Font.BOLD, 50));
-        jLabel.setBounds(0, 50, 500, 100);
+        gameTitle = new JLabel("WaterSort Game!!");
+        gameTitle.setHorizontalAlignment(JLabel.CENTER);
+        gameTitle.setFont(new Font("Gothic", Font.BOLD, 50));
+        gameTitle.setBounds(0, 50, 500, 100);
         
-        add(jLabel);
+        add(gameTitle);
         add(jPanel);
          
         setSize(500,500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        
-        btn1.addActionListener(new ActionListener() {
+	}
+
+	private void clickAction() {
+		loginAction();
+        joinAction();
+        exitAction();
+	}
+	
+	private void loginAction() {
+		loginBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	setVisible(false);
                 new LogIn();
             }
         });
-        
-        btn2.addActionListener(new ActionListener() {
+	}
+	
+	private void joinAction() {
+		joinBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	setVisible(false);
@@ -61,17 +71,14 @@ public class Main extends JFrame{
                 
             }
         });
-        
-        btn3.addActionListener(new ActionListener() {
+	}
+	
+	private void exitAction() {
+		exitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	System.exit(0);
             }
         });
-    }
-	
-	public static void main(String args[]) {
-		new Main();
 	}
-
 }

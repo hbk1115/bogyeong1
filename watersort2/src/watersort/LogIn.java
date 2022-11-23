@@ -6,26 +6,22 @@ import java.awt.event.*;
 
 public class LogIn extends JFrame{
 	
-	JLabel title, nickName, password;
-	JTextField inputNickName, inputPassword;
-	JButton logIn, signUp, home;
-	static int userId;
+	private JLabel title, nickName, password;
+	private JTextField inputNickName, inputPassword;
+	private JButton logIn, signUp, home;
+	private static int userId;
 	
 	public LogIn() {
-		if (userId == 0) {
-			setTitle("LogIn");
-	        setSize(500, 500);
-	        setLayout(null);
-	        
+		if (userId == 0) {	        
 	        logInLayout();
-	        
-	        setLocationRelativeTo(null);
-	        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	        setVisible(true);
 		}
 	}
 	
 	public void logInLayout() {
+		setTitle("LogIn");
+        setSize(500, 500);
+        setLayout(null);
+        
 		Font font = new Font("Gothic", Font.BOLD, 15);
 		
 		title = new JLabel("로그인");
@@ -64,6 +60,9 @@ public class LogIn extends JFrame{
 		add(signUp);
 		add(home);
 		
+		setLocationRelativeTo(null);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
 		
 		logIn.addActionListener(new LogInListener());
 		signUp.addActionListener(new SignUpListener());
@@ -82,26 +81,33 @@ public class LogIn extends JFrame{
 			String userName = inputNickName.getText();
 			String userPassword = inputPassword.getText();
 			
-			if (userName.equals("") || userPassword.equals("")) {
-				JOptionPane.showMessageDialog(null, "아이디와 비밀번호를 입력해주세요.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
+			if (validateUser(userName, userPassword)) {
+				String message = "아이디와 비밀번호를 입력해주세요.";
+				printError(message);
 			} else {
 				DataBase db = new DataBase();
 				int id = db.checkLogIn(userName, userPassword);
 				if (id != 0) {
 					JOptionPane.showMessageDialog(null, "로그인에 성공하셨습니다.");
-					// 세션 부여
 					userId = id;
-					setVisible(false);
-					new Main2();
+					new Menu();
 				} else {
-					JOptionPane.showMessageDialog(null, "일치하는 계정 정보가 없습니다.", "로그인 실패", JOptionPane.ERROR_MESSAGE);
-					//setVisible(false);
-					//new SignUp();
+					String message = "일치하는 계정 정보가 없습니다.";
+					printError(message);
+					new Join();
 				}
+				setVisible(false);
 			}
 			
 		}
 		
+		private boolean validateUser(String userName, String userPassword) {
+			return userName.equals("") || userPassword.equals("");
+		}
+		
+		private void printError(String message) {
+			JOptionPane.showMessageDialog(null, message, "로그인 실패", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	class SignUpListener implements ActionListener {
@@ -109,7 +115,7 @@ public class LogIn extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			setVisible(false);
-			//new SignUp();
+			new Join();
 		}
 		
 	}

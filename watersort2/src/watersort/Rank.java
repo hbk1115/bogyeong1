@@ -24,12 +24,17 @@ public class Rank extends JFrame{
 	
 	private List<String> level;
 	
-	private int flag = -1; 	//버튼이 눌린 상태 표시(0은 시간, 1은 횟수, -1은 아직 버튼을 누르지 않은 상태(초기화면))
+	private int isCheck = -1; 	//버튼이 눌린 상태 표시(0은 시간, 1은 횟수, -1은 아직 버튼을 누르지 않은 상태(초기화면))
 	private final int MAX_LEVEL = 6;
 	
 	public Rank() {
+		setRankLayout();
 		 
-        this.setTitle("Rank");
+		rankAction();
+    }
+	
+	private void setRankLayout() {
+		this.setTitle("Rank");
         
         setSize(620, 650);
         setLayout(null);
@@ -47,6 +52,7 @@ public class Rank extends JFrame{
         back.setBounds(270, 550, 70, 40);
         
         level = new ArrayList<>();
+        
         for (int i = 1; i <= MAX_LEVEL; i++) {
         	level.add("Level " + i);
         }
@@ -69,73 +75,82 @@ public class Rank extends JFrame{
         add(timeRank);
         add(countRank);
         add(rankArea);
-        
-        //메뉴화면으로
+	}
+	
+	private void rankAction() {
+		backAction();
+		countRankAction();
+		timeRankAction();
+		levelAction();
+	}
+	
+	private void backAction() {
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	setVisible(false);
-            	new Main2();
+            	new Menu();
                 
             }
         });
-        
-        //횟수 버튼 눌린 상태
-        this.countRank.addActionListener(new ActionListener() {
+	}
+	
+	private void countRankAction() {
+        countRank.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
         		countRank.setEnabled(false);
         		timeRank.setEnabled(true);
-        		flag = 1;
+        		isCheck = 1;
         	}
         });
-        
-        //시간 버튼 눌린 상태
-        this.timeRank.addActionListener(new ActionListener() {
+	}
+	
+	private void timeRankAction() {
+        timeRank.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
         		countRank.setEnabled(true);
         		timeRank.setEnabled(false);
-        		flag = 0;
+        		isCheck = 0;
         	}
         });
-        
-        //콤보박스(레벨) 선택에 따른 textArea 출력
-        this.levelBox.addActionListener(new ActionListener() {
+	}
+	
+	private void levelAction() {
+        levelBox.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
         		JComboBox cb = (JComboBox)e.getSource();
         		int index = cb.getSelectedIndex() + 1;
-        		//횟수 버튼이 클릭된 상태일 때
-        		if(flag == 1) {
-        			try {
-        				String sql = "select username, move from user, game where user.id = game.user_id and level =" + index + " order by move";
-        				result = dataBase.getResult(sql);
-        				rankArea.setText("  순위	아이디\t     이동횟수\n");
-        				rankArea.append(" ---------------------------------------------------------------------------- \n");
-        				int rank = 1;
-        				while(result.next()) {
-        					rankArea.append("   " + (rank++) + "등\t" + result.getString("username") + "\t     " + result.getInt(2) + "번\n");
-        				}
-        			}catch(SQLException e1) {
-        				System.out.println("DB 연결 오류");
-        			}
-        		}
-        		else if(flag == 0) {
-        			try {
-        				String sql = "select username, time from user, game where user.id = game.user_id and level =" + index + " order by time";
-        				result = dataBase.getResult(sql);
-        				rankArea.setText("  순위	아이디\t     시간\n");
-        				rankArea.append(" ---------------------------------------------------------------------------- \n");
-        				int rank = 1;
-        				while(result.next()) {
-        					rankArea.append("   " + (rank++) + "등\t" + result.getString("username") + "\t     " + result.getInt(2) + "초\n");
-        				}
-        			}catch(Exception e1) {
-        				System.out.println("DB 연결 오류");
-        			}
+        		
+        		if(isCheck == 1) {
+    				String sql = "select username, move from user, game where user.id = game.user_id and level =" + index + " order by move";
+    				result = dataBase.getResult(sql);
+    				printResult(rankArea, "이동횟수", result);
+        		} else if(isCheck == 0) {
+					String sql = "select username, time from user, game where user.id = game.user_id and level =" + index + " order by time";
+					result = dataBase.getResult(sql);
+					printResult(rankArea, "시간", result);
         		}
         	}
+        	
+        	private void printResult(JTextArea rank, String standard, ResultSet result) {
+        		int rankIndex = 1;
+        		
+        		rank.setText("  순위	아이디\t     " + standard + "\n");
+        		rank.append(" ---------------------------------------------------------------------------- \n");
+        		
+        		try {
+					while (result.next()) {
+						rank.append("   " + (rankIndex++) + "등\t" + result.getString("username") + "\t     " + result.getInt(2) + "\n");
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+					System.out.println("결과 받아오지 못함");
+				}
+				
+        	}
         });
-    }
+	}
 }

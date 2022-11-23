@@ -21,7 +21,14 @@ public class Level extends JFrame{
 	
 	public Level() {
 		clearcheck = new Clear();
-        this.setTitle("Level");
+		
+		setLevelLayout();
+        
+		levelAction();
+    }
+
+	private void setLevelLayout() {
+		this.setTitle("Level");
         setLayout(null);
         
         levelPanel = new JPanel();
@@ -60,8 +67,15 @@ public class Level extends JFrame{
  
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        
-        for (int i = 0; i < levelBtn.length; i++) {
+	}
+	
+	private void levelAction() {
+		chooseLevelAction();
+		backAction();
+	}
+	
+	private void chooseLevelAction() {
+		for (int i = 0; i < levelBtn.length; i++) {
 	        levelBtn[i].addActionListener(new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
@@ -73,15 +87,16 @@ public class Level extends JFrame{
 	            }
 	        });
         }
-        
-        backBtn.addActionListener(new ActionListener() {
+	}
+	
+	private void backAction() {
+		backBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	setVisible(false);
-            	new Main2();
+            	new Menu();
                 
             }
         });
-    }
-
+	}
 }
