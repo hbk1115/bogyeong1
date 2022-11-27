@@ -1,67 +1,122 @@
 package watersort;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Main extends JFrame{
+public class Main extends JFrame {
 	
-	JPanel jPanel;
-    JButton btn1;
-    JButton btn2;
-    JButton btn3;
-	
-	public Main() {
-		Ma();
+	private JLabel gameTitle;
+	private JPanel jPanel;
+	private JButton loginBtn;
+	private JButton joinBtn;
+	private JButton exitBtn;
+	private ImageIcon Logo;
+
+	public ImageIcon Labels(ImageIcon images, ImageIcon change) {
+		
+	    ImageIcon image = images;
+		Image img;
+	    Image changeImg;
+	    
+	    img = image.getImage();
+	    changeImg = img.getScaledInstance(400, 400, Image.SCALE_FAST);
+	    change = new ImageIcon(changeImg);
+	    
+	    return change;
 	}
 	
-	public void Ma() {
-		
-        setTitle("Main");
+	public ImageIcon Buttons(ImageIcon images, ImageIcon change) {
+		ImageIcon image = images;
+		Image img;
+	    Image changeImg;
+	    
+	    img = image.getImage();
+	    changeImg = img.getScaledInstance(100, 100, Image.SCALE_FAST);
+	    change = new ImageIcon(changeImg);
+	    
+	    return change;
+	}
+
+	public void limpidity(JButton b) {
+		b.setBorderPainted(false);
+	    b.setContentAreaFilled(false);
+	    b.setFocusPainted(false);
+	    b.setOpaque(false);
+	}
+	
+	public JButton UI(JButton jb, String a) {
+		ImageIcon Ic = null;
+		Ic = Buttons(new ImageIcon(a), Ic);
+		jb = new JButton(Ic);
+		limpidity(jb);
+		return jb;
+	}
+    
+	public void start() {
+		setMainLayout();
+		clickAction();
+    }
+	
+	private void setMainLayout() {
+		setTitle("Main");
         setSize(500, 500);
-        jPanel = new JPanel();
-        btn1 = new JButton("로그인");
-        btn2 = new JButton("회원가입");
-        btn3 = new JButton("뒤로");
+        setLayout(null);
         
-        jPanel.add(btn1);
-        jPanel.add(btn2);
-        jPanel.add(btn3);
-        add(jPanel);
+        loginBtn = UI(loginBtn, "LogIn.png");
+        joinBtn = UI(joinBtn, "Sign Up.png");
+        exitBtn = UI(exitBtn, "Exit.png");
+        
+        Logo = Labels(new ImageIcon("Logo.png"), Logo);
+        gameTitle = new JLabel(Logo);
+        gameTitle.setBounds(40, 0, 400, 400);
+        
+        loginBtn.setBounds(80, 350, 100, 50);
+        joinBtn.setBounds(190, 350, 100, 50);
+        exitBtn.setBounds(300, 350, 100, 50);
+        
+		add(gameTitle);
+        add(loginBtn);
+        add(joinBtn);
+        add(exitBtn);
         
         setLocationRelativeTo(null);
+        setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        
- 
-        btn1.addActionListener(new ActionListener() {
+	}
+
+	private void clickAction() {
+		loginAction();
+        joinAction();
+        exitAction();
+	}
+	
+	private void loginAction() {
+		loginBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	setVisible(false);
-                new Main2();
-                
+                new Login();
             }
         });
-        
-        btn2.addActionListener(new ActionListener() {
+	}
+	
+	private void joinAction() {
+		joinBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	setVisible(false);
                 new Join();
-                
             }
         });
-        
-        btn3.addActionListener(new ActionListener() {
+	}
+	
+	private void exitAction() {
+		exitBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	System.exit(0);
             }
         });
-    }
-	
-	public static void main(String args[]) {
-		new Main();
 	}
-
 }
