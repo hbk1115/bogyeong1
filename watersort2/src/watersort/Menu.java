@@ -6,8 +6,11 @@ import java.awt.event.*;
 
 public class Menu extends JFrame{
 	
-	private JLabel menu;
-	private JButton startBtn, rankBtn, backBtn;
+	private final JPanel jPanel = new JPanel();
+	private final JLabel menu = new JLabel("MENU");
+	private JButton startBtn;
+	private JButton rankBtn;
+	private JButton backBtn;
 	
 	public Menu() {
 		setMenuLayout(); 
@@ -19,12 +22,14 @@ public class Menu extends JFrame{
 		setTitle("Menu");
         setLayout(null);
         
-        JPanel jPanel = new JPanel();
         jPanel.setLayout(new GridLayout(3, 1, 10, 10));
-        menu = new JLabel("MENU");
-        startBtn = new JButton("게임시작");
-        rankBtn = new JButton("순위");
-        backBtn = new JButton("뒤로");
+        
+        startBtn = makeUI("image/Start.png");
+        rankBtn = makeUI("image/Rank.png");
+        backBtn = makeUI("image/Back.png");
+        limpidity(startBtn);
+        limpidity(rankBtn);
+        limpidity(backBtn);
         
         jPanel.add(startBtn);
         jPanel.add(rankBtn);
@@ -43,6 +48,20 @@ public class Menu extends JFrame{
  
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+	}
+	
+	private JButton makeUI(String name) {
+		ImageIcon icon = new ImageIcon(name);
+		Image image = icon.getImage();
+		image = image.getScaledInstance(100, 100, Image.SCALE_FAST);
+		return new JButton(new ImageIcon(image));
+	}
+	
+	private void limpidity(JButton btn) {
+		btn.setBorderPainted(false);
+		btn.setContentAreaFilled(false);
+		btn.setFocusPainted(false);
+		btn.setOpaque(false);
 	}
 	
 	private void menuAction() {

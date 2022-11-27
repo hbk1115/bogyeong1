@@ -6,7 +6,7 @@ import java.awt.event.*;
 
 public class Startgame extends JFrame{
 	
-	private JButton backBtn;
+	private final JButton backBtn = new JButton("뒤로");
 	
 	public Startgame() {
 		 
@@ -20,7 +20,6 @@ public class Startgame extends JFrame{
 	private void setStartGameLayout() {
 		this.setTitle("Level");
         JPanel jPanel = new JPanel();
-        backBtn = new JButton("뒤로");
         
         setSize(500, 500);
         jPanel.add(backBtn);

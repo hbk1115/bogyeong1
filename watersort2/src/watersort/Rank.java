@@ -10,19 +10,19 @@ import java.util.ArrayList;
 
 public class Rank extends JFrame{
 	
-	private JLabel title;
+	private final JLabel title = new JLabel("Rank");
 	
-	private JButton timeRank;		//시간 랭크
-	private JButton countRank;		//횟수 랭크
+	private JButton timeRank;
+	private JButton countRank;
 	private JButton back;
 	
-	private JTextArea rankArea;		//랭크 보여주는 공간
-	private JComboBox levelBox;		//레벨 콤보박스(레벨별로 랭크 보여주기 위함)
+	private final JTextArea rankArea = new JTextArea(30, 15);
+	private JComboBox levelBox;
 	
 	private DataBase dataBase;
 	private ResultSet result;
 	
-	private List<String> level;
+	private final List<String> level = new ArrayList<>();
 	
 	private int isCheck = -1; 	//버튼이 눌린 상태 표시(0은 시간, 1은 횟수, -1은 아직 버튼을 누르지 않은 상태(초기화면))
 	private final int MAX_LEVEL = 6;
@@ -44,37 +44,48 @@ public class Rank extends JFrame{
         
         dataBase = new DataBase();
         
-        title = new JLabel("Rank");
-        back = new JButton("뒤로");
-        
         title.setFont(new Font("Gothic", Font.BOLD, 40));
         title.setBounds(257, 5, 150, 100);
-        back.setBounds(270, 550, 70, 40);
-        
-        level = new ArrayList<>();
+        back = makeUI("image/Back.png", 100);
+        limpidity(back);
+        back.setBounds(255, 550, 100, 50);
         
         for (int i = 1; i <= MAX_LEVEL; i++) {
         	level.add("Level " + i);
         }
         
         levelBox = new JComboBox(level.toArray(new String[level.size()]));
-        timeRank = new JButton("최단 시간 랭크");
-        countRank = new JButton("최소 횟수 랭크");
-        rankArea = new JTextArea(30, 15);
-        rankArea.setEditable(false);
+        timeRank = makeUI("image/Short.png", 200);
+        countRank = makeUI("image/Minimumt.png", 200);
+        limpidity(timeRank);
+        limpidity(countRank);
         
+        rankArea.setEditable(false);
         levelBox.setBounds(150, 150, 310, 40);
-        timeRank.setBounds(150, 100, 150, 40);
-        countRank.setBounds(310, 100, 150, 40);
+        timeRank.setBounds(100, 90, 200, 50);
+        countRank.setBounds(310, 90, 200, 50);
         rankArea.setBounds(150, 200, 310, 340);
         
         add(title);
         add(back);
-        
         add(levelBox);
         add(timeRank);
         add(countRank);
         add(rankArea);
+	}
+	
+	private JButton makeUI(String name, int width) {
+		ImageIcon icon = new ImageIcon(name);
+		Image image = icon.getImage();
+		image = image.getScaledInstance(width, 100, Image.SCALE_FAST);
+		return new JButton(new ImageIcon(image));
+	}
+	
+	private void limpidity(JButton btn) {
+		btn.setBorderPainted(false);
+		btn.setContentAreaFilled(false);
+		btn.setFocusPainted(false);
+		btn.setOpaque(false);
 	}
 	
 	private void rankAction() {
@@ -90,7 +101,6 @@ public class Rank extends JFrame{
             public void actionPerformed(ActionEvent e) {
             	setVisible(false);
             	new Menu();
-                
             }
         });
 	}
@@ -122,28 +132,31 @@ public class Rank extends JFrame{
         	@Override
         	public void actionPerformed(ActionEvent e) {
         		JComboBox cb = (JComboBox)e.getSource();
-        		int index = cb.getSelectedIndex() + 1;
+        		int level = cb.getSelectedIndex() + 1;
         		
         		if(isCheck == 1) {
-    				String sql = "select username, move from user, game where user.id = game.user_id and level =" + index + " order by move";
-    				result = dataBase.getResult(sql);
+        			result = dataBase.scoreInquiryByMove(level);
     				printResult(rankArea, "이동횟수", result);
         		} else if(isCheck == 0) {
-					String sql = "select username, time from user, game where user.id = game.user_id and level =" + index + " order by time";
-					result = dataBase.getResult(sql);
+					result = dataBase.scoreInquiryByTime(level);
 					printResult(rankArea, "시간", result);
         		}
         	}
         	
         	private void printResult(JTextArea rank, String standard, ResultSet result) {
         		int rankIndex = 1;
+        		int beforeRank = 0;
         		
         		rank.setText("  순위	아이디\t     " + standard + "\n");
         		rank.append(" ---------------------------------------------------------------------------- \n");
         		
         		try {
 					while (result.next()) {
+						if (result.getInt(2) == beforeRank) {
+							rankIndex--;
+						}
 						rank.append("   " + (rankIndex++) + "등\t" + result.getString("username") + "\t     " + result.getInt(2) + "\n");
+						beforeRank = result.getInt(2);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();

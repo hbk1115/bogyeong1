@@ -6,9 +6,16 @@ import java.awt.event.*;
 
 public class LogIn extends JFrame{
 	
-	private JLabel title, nickName, password;
-	private JTextField inputNickName, inputPassword;
-	private JButton logIn, signUp, home;
+	private final JLabel title = new JLabel("로그인");
+	private final JLabel nickName = new JLabel("닉네임");
+	private final JLabel password = new JLabel("비밀번호");
+	private final JTextField inputNickName = new JTextField();
+	private final JTextField inputPassword = new JTextField();
+	private JButton logIn;
+	private JButton join;
+	private JButton home;
+	private Font  font = new Font("Gothic", Font.BOLD, 15);
+
 	private static int userId;
 	
 	public LogIn() {
@@ -21,35 +28,26 @@ public class LogIn extends JFrame{
 		setTitle("LogIn");
         setSize(500, 500);
         setLayout(null);
+		
+        logIn = makeUI("image/LogIn.png");
+        join = makeUI("image/Sign Up.png");
+        home = makeUI("image/Home.png");
+        limpidity(logIn);
+        limpidity(join);
+        limpidity(home);
         
-		Font font = new Font("Gothic", Font.BOLD, 15);
-		
-		title = new JLabel("로그인");
-		nickName = new JLabel("닉네임");
-		password = new JLabel("비밀번호");
-		
-		inputNickName = new JTextField();
-		inputPassword = new JTextField();
-		
-		logIn = new JButton("로그인");
-		signUp = new JButton("회원가입");
-		home = new JButton("홈");
-		
-		title.setFont(new Font("Gothic", Font.BOLD, 40));
+		title.setFont(new Font("Gothic", Font.BOLD, 50));
 		nickName.setFont(font);
 		password.setFont(font);
-		logIn.setFont(font);
-		signUp.setFont(font);
-		home.setFont(font);
 		
 		title.setBounds(180, 100, 300, 50);
 		nickName.setBounds(80, 200, 70, 30);
 		password.setBounds(80, 240, 70, 30);
 		inputNickName.setBounds(200, 200, 200, 30);
 		inputPassword.setBounds(200, 240, 200, 30);
-		logIn.setBounds(80, 300, 100, 30);
-		signUp.setBounds(190, 300, 100, 30);
-		home.setBounds(300, 300, 100, 30);
+		logIn.setBounds(80, 300, 100, 50);
+		join.setBounds(190, 300, 100, 50);
+		home.setBounds(300, 300, 100, 50);
 		
 		add(title);
 		add(nickName);
@@ -57,7 +55,7 @@ public class LogIn extends JFrame{
 		add(inputNickName);
 		add(inputPassword);
 		add(logIn);
-		add(signUp);
+		add(join);
 		add(home);
 		
 		setLocationRelativeTo(null);
@@ -65,9 +63,23 @@ public class LogIn extends JFrame{
         setVisible(true);
 		
 		logIn.addActionListener(new LogInListener());
-		signUp.addActionListener(new SignUpListener());
+		join.addActionListener(new JoinListener());
 		home.addActionListener(new HomeListener());
 		
+	}
+	
+	private JButton makeUI(String name) {
+		ImageIcon icon = new ImageIcon(name);
+		Image image = icon.getImage();
+		image = image.getScaledInstance(100, 100, Image.SCALE_FAST);
+		return new JButton(new ImageIcon(image));
+	}
+	
+	private void limpidity(JButton btn) {
+		btn.setBorderPainted(false);
+		btn.setContentAreaFilled(false);
+		btn.setFocusPainted(false);
+		btn.setOpaque(false);
 	}
 	
 	public int getUserId() {
@@ -85,20 +97,25 @@ public class LogIn extends JFrame{
 				String message = "아이디와 비밀번호를 입력해주세요.";
 				printError(message);
 			} else {
-				DataBase db = new DataBase();
-				int id = db.checkLogIn(userName, userPassword);
-				if (id != 0) {
-					JOptionPane.showMessageDialog(null, "로그인에 성공하셨습니다.");
-					userId = id;
-					new Menu();
-				} else {
-					String message = "일치하는 계정 정보가 없습니다.";
-					printError(message);
-					new Join();
-				}
+				checkUserInfo(userName, userPassword);
 				setVisible(false);
 			}
 			
+		}
+		
+		private void checkUserInfo(String userName, String userPassword) {
+			DataBase db = new DataBase();
+			int id = db.checkLogIn(userName, userPassword);
+			
+			if (id != 0) {
+				JOptionPane.showMessageDialog(null, "로그인에 성공하셨습니다.");
+				userId = id;
+				new Menu();
+			} else {
+				String message = "일치하는 계정 정보가 없습니다.";
+				printError(message);
+				new Join();
+			}
 		}
 		
 		private boolean validateUser(String userName, String userPassword) {
@@ -110,7 +127,7 @@ public class LogIn extends JFrame{
 		}
 	}
 	
-	class SignUpListener implements ActionListener {
+	class JoinListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {

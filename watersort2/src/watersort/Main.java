@@ -7,11 +7,12 @@ import java.awt.event.*;
 public class Main extends JFrame {
 	
 	private JLabel gameTitle;
-	private JPanel jPanel;
+	private final JPanel jPanel = new JPanel();
 	private JButton loginBtn;
 	private JButton joinBtn;
 	private JButton exitBtn;
-    
+	private ImageIcon Logo;
+	
 	public void start() {
 		setMainLayout();
 		clickAction();
@@ -19,33 +20,58 @@ public class Main extends JFrame {
 	
 	private void setMainLayout() {
 		setTitle("Main");
-        setLayout(null);
+        setLayout(null);        
         
-        jPanel = new JPanel();
-        jPanel.setLayout(new GridLayout(3, 1, 10, 10));
-        loginBtn = new JButton("로그인");
-        joinBtn = new JButton("회원가입");
-        exitBtn = new JButton("게임 종료");
+        setButtonImage();
         
-        jPanel.add(loginBtn);
-        jPanel.add(joinBtn);
-        jPanel.add(exitBtn);
-        jPanel.setBounds(120, 180, 250, 200);
+        loginBtn.setBounds(80, 350, 100, 50);
+        joinBtn.setBounds(190, 350, 100, 50);
+        exitBtn.setBounds(300, 350, 100, 50);
         
-        gameTitle = new JLabel("WaterSort Game!!");
-        gameTitle.setHorizontalAlignment(JLabel.CENTER);
-        gameTitle.setFont(new Font("Gothic", Font.BOLD, 50));
-        gameTitle.setBounds(0, 50, 500, 100);
+        gameTitle = new JLabel(makeLogo(new ImageIcon("image/Logo.png")));
+        gameTitle.setBounds(40, 0, 400, 400);
         
         add(gameTitle);
-        add(jPanel);
-         
+        add(loginBtn);
+        add(joinBtn);
+        add(exitBtn);
+        
         setSize(500,500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 	}
+	
+	private void setButtonImage() {
+		loginBtn = makeUI("image/LogIn.png");
+        joinBtn = makeUI("image/Sign Up.png");
+        exitBtn = makeUI("image/Exit.png");
+        
+        limpidity(loginBtn);
+        limpidity(joinBtn);
+        limpidity(exitBtn);
+	}
+	
+	private ImageIcon makeLogo(ImageIcon image) {
+	    Image img = image.getImage();
+	    img = img.getScaledInstance(400, 400, Image.SCALE_FAST);	    
+	    return new ImageIcon(img);
+	}
 
+	private JButton makeUI(String name) {
+		ImageIcon icon = new ImageIcon(name);
+		Image image = icon.getImage();
+		image = image.getScaledInstance(100, 100, Image.SCALE_FAST);
+		return new JButton(new ImageIcon(image));
+	}
+	
+	private void limpidity(JButton btn) {
+		btn.setBorderPainted(false);
+		btn.setContentAreaFilled(false);
+		btn.setFocusPainted(false);
+		btn.setOpaque(false);
+	}
+	
 	private void clickAction() {
 		loginAction();
         joinAction();
