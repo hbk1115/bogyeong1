@@ -3,27 +3,32 @@ package watersort;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class Timer extends JFrame implements Runnable{
+public class Timer extends JFrame implements Runnable {
 	
+	private Clear clear;
 	private JLabel timel;
-	int n2;
-	int n;
+	private WaterSortGame waterSortGame;
+	private int millisecond;
+	private int second;
 	
 	public Timer(JLabel timel) {
+		clear = new Clear();
 		this.timel = timel;
-		this.n2 = 0;
-		this.n = 0;
+		this.waterSortGame = new WaterSortGame();
+		this.millisecond = 0;
+		this.second = 0;
 	}
 	
 	public void run() {
 	
 		while(true) {
-			timel.setText(Integer.toString(n) +  " : " + Integer.toString(n2));
-			n2++;
+			timel.setText(Integer.toString(second) +  " : " + Integer.toString(millisecond));
+			++millisecond;
+			waterSortGame.operation();
 			try {
-				if(n2 == 10) {
-					n2 = 0;
-					n++;
+				if(millisecond == 10) {
+					millisecond = 0;
+					++second;
 				}
 				Thread.sleep(100);
 				

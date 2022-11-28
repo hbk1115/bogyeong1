@@ -145,7 +145,7 @@ public class Rank extends JFrame{
         	
         	private void printResult(JTextArea rank, String standard, ResultSet result) {
         		int rankIndex = 1;
-        		int beforeRank = 0;
+        		int beforeRank = 1;
         		
         		rank.setText("  순위	아이디\t     " + standard + "\n");
         		rank.append(" ---------------------------------------------------------------------------- \n");
@@ -162,7 +162,6 @@ public class Rank extends JFrame{
 					e.printStackTrace();
 					System.out.println("결과 받아오지 못함");
 				}
-				
         	}
         });
 	}

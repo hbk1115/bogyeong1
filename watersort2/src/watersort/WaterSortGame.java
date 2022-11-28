@@ -29,6 +29,7 @@ class WaterSortGame extends JFrame {
 	private Stack<Integer> backMovesCounter = new Stack<>();
 	private JLabel timer;
 	private Counter counter;
+    private Utils utils = new Utils();
     
     private ImageIcon fromBottle;
     private ImageIcon toBottle;
@@ -88,7 +89,6 @@ class WaterSortGame extends JFrame {
     	colorType = new int[maxColors];
     	bottle = new JLabel[30];
     	bottleBorder = new JLabel[maxBottles];
-		//JLabel[] bottleLabel = new JLabel[maxBottles];
 		bottles = new ArrayList[maxBottles];
 		
     	for(int i = 0; i < maxColors; i++) {
@@ -102,10 +102,6 @@ class WaterSortGame extends JFrame {
         for(int i = 0; i < maxBottles; i++) {
         	bottleBorder[i] = new JLabel(fromBottle);
         }
-        
-//        for(int i = 0; i < maxBottles; i++) {
-//        	bottleLabel[i] = new JLabel("");
-//        }
     }
     
     private void setGameLayout() {
@@ -129,7 +125,7 @@ class WaterSortGame extends JFrame {
     }
     
     private void outAction() {
-    	JButton outBtn = new JButton("나가기");
+    	JButton outBtn = utils.makeUI("image/Back.png", 100);
     	outBtn.setLocation(20, 20);
     	outBtn.setSize(100, 50);
     	outBtn.setVisible(true);
@@ -146,7 +142,7 @@ class WaterSortGame extends JFrame {
     }
     
     private void undoAction() {
-    	JButton undoBtn = new JButton("뒤로");
+    	JButton undoBtn = utils.makeUI("image/Undo.png", 100);
     	undoBtn.setLocation(480, 20);
     	undoBtn.setVisible(true);
     	undoBtn.setSize(100,50);
@@ -168,7 +164,7 @@ class WaterSortGame extends JFrame {
     	timer.setSize(100,50);
     	timer.setVisible(true);
     	timer.setFont(new Font("Gothic", Font.ITALIC, 20));
-        counter = new Counter(timer);
+        counter = new Counter(timer, thread, level, moveCnt);
         thread = new Thread(counter);
         add(timer);
     }
@@ -235,189 +231,164 @@ class WaterSortGame extends JFrame {
     
     //------------------------------------------여기까지 레이아웃------------------------------------------
     
-    class ShowClear extends JFrame{
-    	private boolean clearcheck = false; //true 되면 클리어 정보 화면으로
-        private JLabel clearLabel;
-    	private JLabel moveLabel;
-    	private JLabel timeLabel;
-    	private JButton closeBtn;
-    	private JButton exitBtn;
-    	private JButton rankBtn;
-    	
-    	public ShowClear() {
-			setTitle("결과 화면");
-			setSize(400, 400);
-			setLayout(null);
-        	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        	setVisible(true);
-        	setLocationRelativeTo(null);
-        
-        	clearLabel = new JLabel("Level" + level + " 클리어!");
-        	moveLabel = new JLabel("이동 : " + moveCnt + "번");
-        	timeLabel = new JLabel("시간 : " + second + "." + millisecond + "초");
-        
-        	clearLabel.setFont(new Font("Gothic", Font.BOLD, 40));
-        	moveLabel.setFont(new Font("Gothic", Font.BOLD, 22));
-        	timeLabel.setFont(new Font("Gothic", Font.BOLD, 22));
-        	
-        	closeBtn = makeUI("image/Home.png");
-        	exitBtn = makeUI("image/Select.png");
-        	rankBtn = makeUI("image/Rank.png");
-        	limpidity(closeBtn);
-        	limpidity(exitBtn);
-        	limpidity(rankBtn);
-        	
-        	clearLabel.setBounds(55, 5, 300, 100);
-        	moveLabel.setBounds(135, 80, 130, 100);
-        	timeLabel.setBounds(135, 140, 200, 100);
-        	closeBtn.setBounds(145, 250, 100, 50);
-        	exitBtn.setBounds(35, 250, 100, 50);
-        	rankBtn.setBounds(255, 250, 100, 50);
-
-        	rankBtn.addActionListener(new ActionListener() {
-        		@Override
-        		public void actionPerformed(ActionEvent e) {
-        			dispose();
-        			new Rank();
-        			Back();
-        		}
-        	});
-    
-        	exitBtn.addActionListener(new ActionListener() {
-        		@Override
-        		public void actionPerformed(ActionEvent e) {
-        			setVisible(false);
-        			new Level();
-        			Back();
-        		}
-        	});
-        	
-        	
-        	closeBtn.addActionListener(new ActionListener() {
-        		@Override
-        		public void actionPerformed(ActionEvent e) {
-        			setVisible(false);
-        			new Menu();
-        			Back();
-        		}
-        	});
-        	
-        	add(clearLabel);
-        	add(moveLabel);
-        	add(timeLabel);
-        	
-        	add(exitBtn);
-        	add(rankBtn);
-        	add(closeBtn);
-        	paint(getGraphics());
-		}
-    	
-    	private JButton makeUI(String name) {
-    		ImageIcon icon = new ImageIcon(name);
-    		Image image = icon.getImage();
-    		image = image.getScaledInstance(100, 100, Image.SCALE_FAST);
-    		return new JButton(new ImageIcon(image));
-    	}
-    	
-    	private void limpidity(JButton btn) {
-    		btn.setBorderPainted(false);
-    		btn.setContentAreaFilled(false);
-    		btn.setFocusPainted(false);
-    		btn.setOpaque(false);
-    	}
-    	
-    	public void Back() {
-        	this.setVisible(false);
-        }
-    }
+//    class ShowClear extends JFrame {
+//    	private boolean clearcheck = false; //true 되면 클리어 정보 화면으로
+//        private JLabel clearLabel;
+//    	private JLabel moveLabel;
+//    	private JLabel timeLabel;
+//    	private JButton closeBtn;
+//    	private JButton exitBtn;
+//    	private JButton rankBtn;
+//    	
+//    	public ShowClear() {
+//			setTitle("결과 화면");
+//			setSize(400, 400);
+//			setLayout(null);
+//        	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        	setVisible(true);
+//        	setLocationRelativeTo(null);
+//        
+//        	clearLabel = new JLabel("Level" + level + " 클리어!");
+//        	moveLabel = new JLabel("이동 : " + moveCnt + "번");
+//        	timeLabel = new JLabel("시간 : " + second + "." + millisecond + "초");
+//        
+//        	clearLabel.setFont(new Font("Gothic", Font.BOLD, 40));
+//        	moveLabel.setFont(new Font("Gothic", Font.BOLD, 22));
+//        	timeLabel.setFont(new Font("Gothic", Font.BOLD, 22));
+//        	
+//        	closeBtn = utils.makeUI("image/Home.png", 100);
+//        	exitBtn = utils.makeUI("image/Select.png", 100);
+//        	rankBtn = utils.makeUI("image/Rank.png", 100);
+//        	
+//        	clearLabel.setBounds(55, 5, 300, 100);
+//        	moveLabel.setBounds(135, 80, 130, 100);
+//        	timeLabel.setBounds(135, 140, 200, 100);
+//        	closeBtn.setBounds(145, 250, 100, 50);
+//        	exitBtn.setBounds(35, 250, 100, 50);
+//        	rankBtn.setBounds(255, 250, 100, 50);
+//
+//        	rankBtn.addActionListener(new ActionListener() {
+//        		@Override
+//        		public void actionPerformed(ActionEvent e) {
+//        			dispose();
+//        			new Rank();
+//        			Back();
+//        		}
+//        	});
+//    
+//        	exitBtn.addActionListener(new ActionListener() {
+//        		@Override
+//        		public void actionPerformed(ActionEvent e) {
+//        			setVisible(false);
+//        			new Level();
+//        			Back();
+//        		}
+//        	});
+//        	
+//        	
+//        	closeBtn.addActionListener(new ActionListener() {
+//        		@Override
+//        		public void actionPerformed(ActionEvent e) {
+//        			setVisible(false);
+//        			new Menu();
+//        			Back();
+//        		}
+//        	});
+//        	
+//        	add(clearLabel);
+//        	add(moveLabel);
+//        	add(timeLabel);
+//        	
+//        	add(exitBtn);
+//        	add(rankBtn);
+//        	add(closeBtn);
+//        	paint(getGraphics());
+//		}
+//    	
+//    	public void Back() {
+//        	this.setVisible(false);
+//        }
+//    }
     
     //-------------------------------------- 여기까지 랭크 화면 --------------------------------
-    class Counter extends JFrame implements Runnable {
-    	
-    	private Clear clear;
-    	private JLabel timel;
-    	
-    	public Counter(JLabel timel) {
-    		clear = new Clear();
-    		this.timel = timel;
-    	}
-    	
-    	public void run() {
-    	
-    		while(true) {
-    			try {
-    				++millisecond;
-    				if(millisecond == 10) {
-    					millisecond = 0;
-    					++second;
-    				}
-    				
-            		timel.setText(Integer.toString(second) +  " : " + Integer.toString(millisecond));
-    				
-    				operation();
-    				if(isSolved()) {
-    					DataBase dataBase = new DataBase();
-    					
-    					clear.run(level);
-    					System.out.println("시간 = " + second + ":" + millisecond);
-    					
-    					LogIn login = new LogIn();
-    					int id = login.getUserId();
-    					int userlevel = dataBase.checklevel(id, level);
-    					int userTime = dataBase.getTime(id, level);
-    					
-    					ResultSet result = dataBase.getResult(id);
-    					String timelabel = timer.getText().toString();
-    					System.out.println(timelabel);
-    					int time = Integer.parseInt(timelabel.split(" : ")[0]);
-    					
-    					if (!result.next()) {
-    						String insertSql = "insert into game (user_id, level, move, time) values (" + id + "," + level + "," + moveCnt + "," + time + ");";
-    						if(dataBase.updateResult(insertSql)) {
-    							JOptionPane.showMessageDialog(null, "순위 등록 완료");
-    						}
-    					} else {
-    						if(userlevel < level) {
-    							String insertSql = "insert into game (use"
-        								+ "r_id, level, move, time) values (" + id + "," + level + "," + moveCnt + "," + time + ");";
-        						if(dataBase.updateResult(insertSql)) {
-        							JOptionPane.showMessageDialog(null, "레벨 순위 등록 완료");
-        						}
-    						} else if(userTime > time) {
-								String updateSql = "update game set move=" + moveCnt + ", time=" + time + " where user_id=" + id + " and level=" + level + ";";
-        						if (dataBase.updateResult(updateSql)) {
-        							JOptionPane.showMessageDialog(null, "순위 갱신 완료");
-        						}
-    						}
-    					}
-    					new ShowClear();
-    					thread.interrupt();
-    		        	break;
-
-    		        }
-    				Thread.sleep(100);
-    			} catch (InterruptedException e) {
-    				e.printStackTrace();
-    			} catch (SQLException e) {
-					e.printStackTrace();
-				}
-    		}
-    		
-    		//moveRankPage();
-    		
-//    		setVisible(false);
-//			new Rank();	
-    	}
-    	
-//    	private void moveRankPage() {
-//    		thread.interrupt();
-//        	setVisible(false);
-//        	new Rank();
-//        }
-    }
+//    class Counter extends JFrame implements Runnable {
+//    	
+//    	private Clear clear;
+//    	private JLabel timel;
+//    	
+//    	public Counter(JLabel timel) {
+//    		clear = new Clear();
+//    		this.timel = timel;
+//    	}
+//    	
+//    	public void run() {
+//    	
+//    		while(true) {
+//    			try {
+//    				++millisecond;
+//    				if(millisecond == 10) {
+//    					millisecond = 0;
+//    					++second;
+//    				}
+//    				
+//            		timel.setText(Integer.toString(second) +  " : " + Integer.toString(millisecond));
+//    				
+//    				operation();
+//    				if(isSolved()) {
+//    					DataBase dataBase = new DataBase();
+//    					
+//    					clear.run(level);
+//    					System.out.println("시간 = " + second + ":" + millisecond);
+//    					
+//    					LogIn login = new LogIn();
+//    					int id = login.getUserId();
+//    					int userlevel = dataBase.checklevel(id, level);
+//    					int userTime = dataBase.getTime(id, level);
+//    					
+//    					ResultSet result = dataBase.getResult(id);
+//    					String timelabel = timer.getText().toString();
+//    					System.out.println(timelabel);
+//    					int time = Integer.parseInt(timelabel.split(" : ")[0]);
+//    					
+//    					if (!result.next()) {
+//    						String insertSql = "insert into game (user_id, level, move, time) values (" + id + "," + level + "," + moveCnt + "," + time + ");";
+//    						if(dataBase.updateResult(insertSql)) {
+//    							JOptionPane.showMessageDialog(null, "순위 등록 완료");
+//    						}
+//    					} else {
+//    						if(userlevel < level) {
+//    							String insertSql = "insert into game (use"
+//        								+ "r_id, level, move, time) values (" + id + "," + level + "," + moveCnt + "," + time + ");";
+//        						if(dataBase.updateResult(insertSql)) {
+//        							JOptionPane.showMessageDialog(null, "레벨 순위 등록 완료");
+//        						}
+//    						} else if(userTime > time) {
+//								String updateSql = "update game set move=" + moveCnt + ", time=" + time + " where user_id=" + id + " and level=" + level + ";";
+//        						if (dataBase.updateResult(updateSql)) {
+//        							JOptionPane.showMessageDialog(null, "순위 갱신 완료");
+//        						}
+//    						}
+//    					}
+//    					
+//    					new Result(level, moveCnt, second, millisecond);
+//    					thread.interrupt();
+//    		        	break;
+//
+//    		        }
+//    				Thread.sleep(100);
+//    			} catch (InterruptedException e) {
+//    				e.printStackTrace();
+//    			} catch (SQLException e) {
+//					e.printStackTrace();
+//				}
+//    		}
+//    		
+//    	}
+//
+//    }
 
  // ----------------------------------------------- 여기까지 스레드 부분 -------------------------------------
-    private boolean isSolved() { 
+    public boolean isSolved() { 
         for (int x = 0; x < maxBottles; x++) {
             if (!checkPaintType(x) || !checkBottleSize(x)) {
             	return false;

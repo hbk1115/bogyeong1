@@ -17,12 +17,12 @@ public class Level extends JFrame{
 	
 	private final List<String> level = new ArrayList<>();
 	
-	private Clear clear;
+	//private Clear clear;
 	private WaterSortGame waterSortGame;
 	private int userLevel;
 	
 	public Level() {
-		clear = new Clear();
+		//clear = new Clear();
 		waterSortGame = new WaterSortGame();
 		
 		setLevelLayout();
